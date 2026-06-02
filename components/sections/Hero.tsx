@@ -92,6 +92,8 @@ export function Hero() {
           {/* Avatar image */}
           <AnimatedSection delay={0.2}>
             <div className="relative h-[280px] w-[280px] md:h-[350px] md:w-[350px]">
+              {/* Intentionally using native img to preserve full-size render */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/avatar.png"
                 alt="Mohamed Ali Chouikh"
