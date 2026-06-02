@@ -25,8 +25,12 @@ export const ProfileSchema = z.object({
   phone: z.string(),
   location: z.string(),
   socialLinks: SocialLinksSchema,
-  avatarUrl: z.url(),
-  resumeUrl: z.url(),
+  avatarUrl: z.string().refine((val) => val.startsWith("/") || val.startsWith("http"), {
+    message: "Must be a local path (/) or a URL",
+  }),
+  resumeUrl: z.string().refine((val) => val.startsWith("/") || val.startsWith("http"), {
+    message: "Must be a local path (/) or a URL",
+  }),
   stats: z.array(StatSchema),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
@@ -35,7 +39,9 @@ export type Profile = z.infer<typeof ProfileSchema>;
 export const ExperienceSchema = z.object({
   id: z.string(),
   company: z.string(),
-  companyUrl: z.url(),
+  companyUrl: z.string().refine((val) => val === "" || val.startsWith("http"), {
+    message: "Must be empty or a valid URL",
+  }),
   title: z.string(),
   location: z.string(),
   dateRange: z.string(),
@@ -112,7 +118,9 @@ export type NavItem = z.infer<typeof NavItemSchema>;
 export const SiteConfigSchema = z.object({
   sectionOrder: z.array(z.string()),
   theme: z.string(),
-  resumeUrl: z.url(),
+  resumeUrl: z.string().refine((val) => val.startsWith("/") || val.startsWith("http"), {
+    message: "Must be a local path (/) or a URL",
+  }),
   navItems: z.array(NavItemSchema),
 });
 export type SiteConfig = z.infer<typeof SiteConfigSchema>;

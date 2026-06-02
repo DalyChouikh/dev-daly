@@ -1,20 +1,36 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Mohamed Ali Chouikh | Software & AI Engineer",
-  description:
-    "Portfolio of Mohamed Ali Chouikh — M.Sc. Software Engineering candidate specializing in AI, full-stack, and backend systems.",
-};
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { Hero } from "@/components/sections/Hero";
+import { Skills } from "@/components/sections/Skills";
+import { Experience } from "@/components/sections/Experience";
+import { Education } from "@/components/sections/Education";
+import { Projects } from "@/components/sections/Projects";
+import { LeadershipSection } from "@/components/sections/LeadershipSection";
+import { Certifications } from "@/components/sections/Certifications";
+import { Languages } from "@/components/sections/Languages";
+import { Contact } from "@/components/sections/Contact";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-surface text-on-surface">
-      <h1 className="font-display text-5xl font-extrabold tracking-tight text-on-surface">
-        Mohamed Ali Chouikh
-      </h1>
-      <p className="mt-4 max-w-md text-center text-lg text-on-surface-variant">
-        Software & AI Engineer — Portfolio coming soon.
-      </p>
-    </main>
+    <div className="relative min-h-screen">
+      <Navbar />
+
+      <main className="relative">
+        <Hero />
+
+        <div className="space-y-0">
+          <Skills />
+          <Experience />
+          <Education />
+          <Projects />
+          <LeadershipSection />
+          <Certifications />
+          <Languages />
+          <Contact />
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

@@ -18,3 +18,4 @@
 15. **NEVER use SQL queries in routes/pages** - use dedicated queries files and import them
 16. **ALWAYS use DRY principles** - avoid code duplication, extract reusable logic into functions or modules
 17. **NEVER hardcode values** - use constants or configuration files instead
+18. **ALWAYS use bun instead of npm** - ensure consistency in package management and scripts
