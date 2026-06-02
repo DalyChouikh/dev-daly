@@ -14,7 +14,7 @@ export function Hero() {
       className="relative flex min-h-[90vh] items-center px-6 pt-24 md:px-8"
     >
       {/* Subtle background glow on right side */}
-      <div className="pointer-events-none absolute right-0 top-1/4 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-primary/[0.04] blur-[120px]" />
+      <div className="pointer-events-none absolute right-0 top-1/4 h-125 w-125 -translate-y-1/2 rounded-full bg-primary/4 blur-[120px]" />
 
       <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-12 md:flex-row md:gap-16">
         {/* Left Content */}
@@ -79,19 +79,19 @@ export function Hero() {
           <div className="absolute right-0 top-0 flex flex-col gap-3 md:right-4">
             <FloatingSocialLink
               href={profile.socialLinks.linkedin}
-              icon={<LinkedIn className="h-[18px] w-[18px]" />}
+              icon={<LinkedIn className="h-4.5 w-4.5" />}
               label="LinkedIn"
             />
             <FloatingSocialLink
               href={profile.socialLinks.github}
-              icon={<GitHub className="h-[18px] w-[18px]" />}
+              icon={<GitHub className="h-4.5 w-4.5" />}
               label="GitHub"
             />
           </div>
 
           {/* Avatar placeholder */}
           <AnimatedSection delay={0.2}>
-            <div className="relative h-[280px] w-[280px] md:h-[350px] md:w-[350px]">
+            <div className="relative h-70 w-70 md:h-87.5 md:w-87.5">
               <div className="absolute inset-0 rounded-full bg-surface-container-high/50 backdrop-blur-[20px]" />
               <div className="flex h-full w-full items-center justify-center text-on-surface-variant">
                 <span className="text-sm font-mono">Avatar placeholder</span>
@@ -125,7 +125,7 @@ function FloatingSocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-on-surface-variant backdrop-blur-[40px] transition-all duration-300 hover:border-primary/40 hover:text-primary"
+      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/3 text-on-surface-variant backdrop-blur-2xl transition-all duration-300 hover:border-primary/40 hover:text-primary"
     >
       {icon}
     </Link>
