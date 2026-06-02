@@ -89,13 +89,14 @@ export function Hero() {
             />
           </div>
 
-          {/* Avatar placeholder */}
+          {/* Avatar image */}
           <AnimatedSection delay={0.2}>
-            <div className="relative h-70 w-70 md:h-87.5 md:w-87.5">
-              <div className="absolute inset-0 rounded-full bg-surface-container-high/50 backdrop-blur-[20px]" />
-              <div className="flex h-full w-full items-center justify-center text-on-surface-variant">
-                <span className="text-sm font-mono">Avatar placeholder</span>
-              </div>
+            <div className="relative h-[280px] w-[280px] md:h-[350px] md:w-[350px]">
+              <img
+                src="/images/avatar.png"
+                alt="Mohamed Ali Chouikh"
+                className="h-full w-full object-contain"
+              />
             </div>
           </AnimatedSection>
         </div>
