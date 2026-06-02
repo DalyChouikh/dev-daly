@@ -64,24 +64,30 @@ export function Contact() {
       <div className="mt-12 grid gap-10 lg:grid-cols-2">
         {/* Contact Info */}
         <AnimatedSection delay={0.1}>
-          <div className="space-y-8">
-            <ContactInfoItem
-              icon={<Mail size={20} />}
-              label="Email"
-              value={profile.email}
-              href={`mailto:${profile.email}`}
-            />
-            <ContactInfoItem
-              icon={<Phone size={20} />}
-              label="Phone"
-              value={profile.phone}
-              href={`tel:${profile.phone}`}
-            />
-            <ContactInfoItem
-              icon={<MapPin size={20} />}
-              label="Location"
-              value={profile.location}
-            />
+          <div className="space-y-6">
+            <div className="py-2">
+              <ContactInfoItem
+                icon={<Mail size={20} />}
+                label="Email"
+                value={profile.email}
+                href={`mailto:${profile.email}`}
+              />
+            </div>
+            <div className="py-2">
+              <ContactInfoItem
+                icon={<Phone size={20} />}
+                label="Phone"
+                value={profile.phone}
+                href={`tel:${profile.phone}`}
+              />
+            </div>
+            <div className="py-2">
+              <ContactInfoItem
+                icon={<MapPin size={20} />}
+                label="Location"
+                value={profile.location}
+              />
+            </div>
 
             <div className="mt-8 flex gap-3">
               <SocialButton
@@ -217,14 +223,14 @@ function ContactInfoItem({
     return (
       <a
         href={href}
-        className="group transition-colors duration-200 hover:text-primary"
+        className="group block transition-colors duration-200 hover:text-primary"
       >
         {content}
       </a>
     );
   }
 
-  return content;
+  return <div className="block">{content}</div>;
 }
 
 function SocialButton({

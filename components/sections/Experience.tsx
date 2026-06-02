@@ -38,8 +38,8 @@ export function Experience() {
         <div className="absolute left-2.25 top-0 h-full w-0.5 bg-linear-to-b from-primary/60 to-transparent md:left-2.25" />
 
         {sorted.map((role: Experience, index: number) => (
-          <StaggerItem key={role.id}>
-            <div className="relative mb-14 flex gap-5 last:mb-0 md:gap-7">
+          <StaggerItem key={role.id} className="block py-7 last:pb-0">
+            <div className="relative flex gap-5 md:gap-7">
               {/* Timeline node — fixed 20px width so dot centers on the line */}
               <div className="mt-1.5 flex w-5 shrink-0 justify-center">
                 <div
