@@ -64,7 +64,7 @@ export function Contact() {
       <div className="mt-12 grid gap-10 lg:grid-cols-2">
         {/* Contact Info */}
         <AnimatedSection delay={0.1}>
-          <div className="space-y-6">
+          <div className="space-y-8">
             <ContactInfoItem
               icon={<Mail size={20} />}
               label="Email"

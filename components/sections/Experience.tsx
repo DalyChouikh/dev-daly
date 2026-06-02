@@ -1,6 +1,5 @@
 import { getExperience } from "@/lib/data";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
-import { TimelineNode } from "@/components/ui/TimelineNode";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { isValid, parseISO } from "date-fns";
 import Link from "next/link";
@@ -35,19 +34,26 @@ export function Experience() {
       </AnimatedSection>
 
       <StaggerContainer className="relative mt-12" staggerDelay={0.15}>
-        {/* Timeline vertical line */}
-        <div className="absolute left-[7px] top-0 h-full w-[2px] bg-gradient-to-b from-primary/60 to-transparent md:left-[9px]" />
+        {/* Timeline vertical line — centered in the 20px dot column */}
+        <div className="absolute left-2.25 top-0 h-full w-0.5 bg-linear-to-b from-primary/60 to-transparent md:left-2.25" />
 
         {sorted.map((role: Experience, index: number) => (
           <StaggerItem key={role.id}>
-            <div className="relative mb-10 flex gap-4 last:mb-0 md:gap-6">
-              {/* Timeline node */}
-              <div className="mt-1 shrink-0">
-                <TimelineNode isActive={index === 0} />
+            <div className="relative mb-14 flex gap-5 last:mb-0 md:gap-7">
+              {/* Timeline node — fixed 20px width so dot centers on the line */}
+              <div className="mt-1.5 flex w-5 shrink-0 justify-center">
+                <div
+                  className={[
+                    "h-3.5 w-3.5 rounded-full border-2 border-primary bg-surface",
+                    index === 0 && "animate-[pulse-glow_2s_ease-in-out_infinite]",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
               </div>
 
               {/* Card */}
-              <div className="flex-1 rounded-default border border-white/10 bg-white/[0.03] p-5 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)] md:p-6">
+              <div className="flex-1 rounded-default border border-white/10 bg-white/3 p-5 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)] md:p-6">
                 <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <h3 className="font-display text-lg font-bold text-on-surface">

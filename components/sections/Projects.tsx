@@ -26,8 +26,8 @@ export function Projects() {
         staggerDelay={0.15}
       >
         {projects.map((project: Project) => (
-          <StaggerItem key={project.id}>
-            <div className="group relative rounded-default border border-white/10 bg-white/[0.03] p-6 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+          <StaggerItem key={project.id} className="h-full">
+            <div className="group relative flex h-full flex-col rounded-default border border-white/10 bg-white/[0.03] p-6 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]">
               {/* Year badge */}
               <div className="absolute right-4 top-4 font-mono text-xs text-primary">
                 {project.year}
@@ -48,7 +48,7 @@ export function Projects() {
                 ))}
               </div>
 
-              <ul className="mt-4 space-y-2">
+              <ul className="mt-4 flex-1 space-y-2">
                 {project.bullets.map((bullet, i) => (
                   <li
                     key={i}

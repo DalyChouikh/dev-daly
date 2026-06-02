@@ -1,12 +1,13 @@
 import { getLanguages } from "@/lib/data";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
+import { CircularRing } from "@/components/ui/CircularRing";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import type { Language } from "@/lib/types";
 
-const proficiencyOrder: Record<string, number> = {
-  "Native": 1,
-  "Professional proficiency": 0.75,
-  "Elementary proficiency": 0.25,
+const proficiencyMap: Record<string, { percentage: number; label: string }> = {
+  Native: { percentage: 100, label: "100%" },
+  "Professional proficiency": { percentage: 75, label: "75%" },
+  "Elementary proficiency": { percentage: 25, label: "25%" },
 };
 
 export function Languages() {
@@ -28,26 +29,20 @@ export function Languages() {
         staggerDelay={0.1}
       >
         {languages.map((lang: Language) => {
-          const width = proficiencyOrder[lang.proficiency] ?? 0.5;
+          const level = proficiencyMap[lang.proficiency] ?? { percentage: 50, label: "50%" };
 
           return (
             <StaggerItem key={lang.name}>
-              <div className="rounded-default border border-white/10 bg-white/[0.03] p-6 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center gap-5 rounded-default border border-white/10 bg-white/[0.03] p-5 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+                <CircularRing percentage={level.percentage} label={level.label} />
+
+                <div>
                   <h3 className="font-display text-lg font-bold text-on-surface">
                     {lang.name}
                   </h3>
-                  <span className="font-mono text-xs text-primary">
+                  <p className="mt-1 text-sm text-primary">
                     {lang.proficiency}
-                  </span>
-                </div>
-
-                {/* Progress bar */}
-                <div className="mt-4 h-2 w-full rounded-full bg-white/5">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-primary-container to-primary transition-all duration-1000"
-                    style={{ width: `${width * 100}%` }}
-                  />
+                  </p>
                 </div>
               </div>
             </StaggerItem>
