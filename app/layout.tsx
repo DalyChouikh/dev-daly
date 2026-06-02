@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://dev-daly.netlify.app",
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://localhost:3000",
     siteName: "Mohamed Ali Chouikh Portfolio",
     title: "Mohamed Ali Chouikh | Software & AI Engineer",
     description:

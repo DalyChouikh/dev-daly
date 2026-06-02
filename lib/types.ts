@@ -4,7 +4,7 @@ import { z } from "zod";
 export const SocialLinksSchema = z.object({
   linkedin: z.url(),
   github: z.url(),
-  portfolio: z.url(),
+  portfolio: z.url().or(z.literal("")),
 });
 export type SocialLinks = z.infer<typeof SocialLinksSchema>;
 
