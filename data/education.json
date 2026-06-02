@@ -1,0 +1,18 @@
+[
+  {
+    "id": "issatso-masters",
+    "institution": "Higher Institute of Applied Sciences and Technology of Sousse",
+    "location": "Sousse, Tunisia",
+    "degree": "Master's Degree in Software Engineering",
+    "dateRange": "2024 — 2027 (Expected)",
+    "coursework": ["Distributed Systems", "Artificial Intelligence", "Software Architecture", "Web Development"]
+  },
+  {
+    "id": "issatso-bachelors",
+    "institution": "Higher Institute of Applied Sciences and Technology of Sousse",
+    "location": "Sousse, Tunisia",
+    "degree": "Bachelor's Degree in Computer Science",
+    "dateRange": "2021 — 2024",
+    "coursework": ["Computer Science Fundamentals", "Algorithms", "Operating Systems", "Data Structures", "Databases", "Database Administration", "Networks"]
+  }
+]

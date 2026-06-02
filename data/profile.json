@@ -1,0 +1,20 @@
+{
+  "name": "Mohamed Ali Chouikh",
+  "title": "Software & AI Engineer",
+  "tagline": "Software Engineer @ISSATSO | Golang | NestJS | AI/ML | DevOps Enthusiast | Open for New Opportunities",
+  "summary": "M.Sc. Software Engineering candidate graduating in 2027 with 2+ years of hands-on experience shipping production AI, full-stack, mobile, and backend systems across 15+ freelance projects and 2 software developer internships. Delivered AI user-story generation workflows, marketplace-style backend services, a startup crowdfunding platform, skilled in JavaScript, TypeScript, Go, Java, Python, React, Next.js, NestJS, Docker, Azure, PostgreSQL, and AI model fine-tuning.",
+  "email": "chouikhdaly215@gmail.com",
+  "phone": "+216 92 871 542",
+  "location": "Monastir, Tunisia",
+  "socialLinks": {
+    "linkedin": "https://www.linkedin.com/in/mohamedali-chouikh/",
+    "github": "https://github.com/DalyChouikh",
+    "portfolio": "https://dev-daly.netlify.app"
+  },
+  "avatarUrl": "/images/avatar.jpg",
+  "resumeUrl": "/resume.pdf",
+  "stats": [
+    { "value": "2+", "label": "Years Experience" },
+    { "value": "15+", "label": "Freelance Projects" }
+  ]
+}

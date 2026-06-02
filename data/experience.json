@@ -1,0 +1,41 @@
+[
+  {
+    "id": "upwork-freelance",
+    "company": "Upwork",
+    "companyUrl": "https://www.upwork.com/freelancers/~017bed00e9fb73f753",
+    "title": "Independent AI/Software Engineer Freelancer",
+    "location": "Remote / Sousse, Tunisia",
+    "dateRange": "Sept 2024 — Present",
+    "bullets": [
+      "Delivered 15+ freelance AI and full-stack projects for international clients, converting business requirements into production-ready JavaScript/TypeScript services and REST API features.",
+      "Built marketplace-style backend services, API integrations, and data handling workflows for platforms with Airbnb-like booking and property-management requirements.",
+      "Owned client-facing delivery from requirements clarification to implementation, integration, and handoff using modern backend frameworks."
+    ]
+  },
+  {
+    "id": "insimplo-intern",
+    "company": "Insimplo",
+    "companyUrl": "",
+    "title": "Software Developer Intern",
+    "location": "Sousse, Tunisia",
+    "dateRange": "July 2025 — Aug 2025",
+    "bullets": [
+      "Fine-tuned a lightweight Gemma AI model to generate user stories and subtasks from feature descriptions across 4+ delivery tracks, including backend, frontend, and UI/UX.",
+      "Built a .NET desktop application with SQLite storage, a multi-step wizard, export workflows, and JIRA integration for product-planning handoff.",
+      "Containerized the workflow with Docker and supported Azure deployment during a 2-month internship delivery."
+    ]
+  },
+  {
+    "id": "proxym-intern",
+    "company": "Proxym-IT",
+    "companyUrl": "",
+    "title": "Software Developer Intern",
+    "location": "Sousse, Tunisia",
+    "dateRange": "Feb 2024 — June 2024",
+    "bullets": [
+      "Built a crowdfunding platform connecting 2 audiences: startups pitching investment opportunities and investors evaluating them.",
+      "Implemented web, mobile, and backend features using React, React Native, NestJS, PostgreSQL, Docker, and Azure.",
+      "Integrated DialogFlow and Redis to support conversational workflows, caching, and improved platform scalability."
+    ]
+  }
+]

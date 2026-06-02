@@ -1,0 +1,37 @@
+[
+  {
+    "category": "Languages",
+    "icon": "code",
+    "items": ["Go (Golang)", "Java", "Python", "JavaScript", "TypeScript"]
+  },
+  {
+    "category": "Frontend & Mobile",
+    "icon": "layout",
+    "items": ["React", "React Native", "Next.js", "Android Java", "HTML5", "CSS3", "TailwindCSS"]
+  },
+  {
+    "category": "Backend",
+    "icon": "server",
+    "items": ["Node.js", "NestJS", "Django", "FastAPI", "Go Fiber", "Gin", "Spring Boot", "REST APIs", "Microservices", "gRPC", "Java RMI"]
+  },
+  {
+    "category": "AI & Automation",
+    "icon": "brain",
+    "items": ["RAG", "MCPs", "Tool Calling", "Agentic Workflows", "Prompt Engineering", "Vector Databases", "Model Fine-tuning", "DialogFlow"]
+  },
+  {
+    "category": "Databases & Caching",
+    "icon": "database",
+    "items": ["PostgreSQL", "MongoDB", "MySQL", "SQLite", "Redis"]
+  },
+  {
+    "category": "Cloud & DevOps",
+    "icon": "cloud",
+    "items": ["Docker", "Kubernetes", "Terraform", "GitHub Actions", "Linux", "Kafka", "ZooKeeper", "Azure", "AWS"]
+  },
+  {
+    "category": "Testing & Tools",
+    "icon": "wrench",
+    "items": ["Jest", "Vitest", "Playwright", "Git", "Postman", "Figma"]
+  }
+]
