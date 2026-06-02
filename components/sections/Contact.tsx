@@ -113,7 +113,7 @@ export function Contact() {
         <AnimatedSection delay={0.2}>
           <form
             onSubmit={handleSubmit}
-            className="rounded-default border border-white/10 bg-white/[0.03] p-6 backdrop-blur-[20px] md:p-8"
+            className="glass-card p-6 md:p-8"
           >
             <div className="space-y-5">
               <div>

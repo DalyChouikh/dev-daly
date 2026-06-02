@@ -4,8 +4,8 @@ import { useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, Save, Eye, EyeOff, AlertCircle } from "lucide-react";
+import type { JsonValue, JsonObject, JsonArray } from "@/lib/types";
 
-// Map of section IDs to their data file names
 const sectionMap: Record<string, string> = {
   profile: "profile",
   experience: "experience",
@@ -18,12 +18,20 @@ const sectionMap: Record<string, string> = {
   site: "site",
 };
 
+/**
+ * Parses a JSON value from a fetch response.
+ * Used during initial data load before type narrowing.
+ */
+function parseJson(json: string): JsonValue {
+  return JSON.parse(json) as JsonValue;
+}
+
 export default function SectionEditorPage() {
   const params = useParams();
   const section = params.section as string;
   const sectionName = sectionMap[section];
 
-  const [data, setData] = useState<unknown>(null);
+  const [data, setData] = useState<JsonValue>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -31,13 +39,12 @@ export default function SectionEditorPage() {
   const [showJson, setShowJson] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Load data on mount
   useState(() => {
     const loadData = async () => {
       try {
         const response = await fetch(`/data/${sectionName}.json`);
-        const json = await response.json();
-        setData(json);
+        const raw = await response.text();
+        setData(parseJson(raw));
       } catch {
         setError("Failed to load data");
       } finally {
@@ -121,7 +128,6 @@ export default function SectionEditorPage() {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <Link
@@ -139,7 +145,7 @@ export default function SectionEditorPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowJson(!showJson)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface-variant transition-colors hover:bg-white/5"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/3 px-3 py-2 text-sm text-on-surface-variant transition-colors hover:bg-white/5"
           >
             {showJson ? <EyeOff size={14} /> : <Eye size={14} />}
             {showJson ? "Hide JSON" : "Show JSON"}
@@ -168,7 +174,6 @@ export default function SectionEditorPage() {
         </div>
       )}
 
-      {/* JSON Preview */}
       {showJson && (
         <div className="mt-6 rounded-default border border-white/10 bg-surface-container-low p-4">
           <pre className="overflow-auto text-xs text-on-surface-variant">
@@ -177,7 +182,6 @@ export default function SectionEditorPage() {
         </div>
       )}
 
-      {/* Editor */}
       <div className="mt-6">
         <GenericEditor
           data={data}
@@ -191,61 +195,44 @@ export default function SectionEditorPage() {
   );
 }
 
-/**
- * Generic JSON editor that recursively renders editable fields.
- */
-function GenericEditor({
-  data,
-  onChange,
-  path = "",
-}: {
-  data: unknown;
-  onChange: (data: unknown) => void;
+interface GenericEditorProps {
+  data: JsonValue;
+  onChange: (data: JsonValue) => void;
   path?: string;
-}) {
+}
+
+function GenericEditor({ data, onChange, path = "" }: GenericEditorProps) {
   if (data === null || data === undefined) {
     return <span className="text-on-surface-variant">null</span>;
   }
 
   if (typeof data === "string" || typeof data === "number" || typeof data === "boolean") {
     return (
-      <SimpleField
-        value={data}
-        onChange={(value) => onChange(value)}
-      />
+      <SimpleField value={data} onChange={onChange} />
     );
   }
 
   if (Array.isArray(data)) {
     return (
-      <ArrayEditor
-        data={data}
-        onChange={onChange}
-        path={path}
-      />
+      <ArrayEditor data={data} onChange={onChange} path={path} />
     );
   }
 
   if (typeof data === "object") {
     return (
-      <ObjectEditor
-        data={data as Record<string, unknown>}
-        onChange={onChange}
-        path={path}
-      />
+      <ObjectEditor data={data} onChange={onChange} path={path} />
     );
   }
 
   return <span className="text-error">Unsupported type</span>;
 }
 
-function SimpleField({
-  value,
-  onChange,
-}: {
+interface SimpleFieldProps {
   value: string | number | boolean;
   onChange: (value: string | number | boolean) => void;
-}) {
+}
+
+function SimpleField({ value, onChange }: SimpleFieldProps) {
   if (typeof value === "boolean") {
     return (
       <button
@@ -268,7 +255,7 @@ function SimpleField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={3}
-        className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
+        className="w-full rounded-md border border-white/10 bg-white/3 px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
       />
     );
   }
@@ -285,22 +272,20 @@ function SimpleField({
           onChange(val);
         }
       }}
-      className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
+      className="w-full rounded-md border border-white/10 bg-white/3 px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
     />
   );
 }
 
-function ObjectEditor({
-  data,
-  onChange,
-  path,
-}: {
-  data: Record<string, unknown>;
-  onChange: (data: Record<string, unknown>) => void;
+interface ObjectEditorProps {
+  data: JsonObject;
+  onChange: (data: JsonObject) => void;
   path: string;
-}) {
+}
+
+function ObjectEditor({ data, onChange, path }: ObjectEditorProps) {
   const updateField = useCallback(
-    (key: string, value: unknown) => {
+    (key: string, value: JsonValue) => {
       onChange({ ...data, [key]: value });
     },
     [data, onChange],
@@ -310,7 +295,7 @@ function ObjectEditor({
     <div className="space-y-3">
       {Object.entries(data).map(([key, value]) => (
         <div key={key} className="flex flex-col gap-1 sm:flex-row sm:items-start sm:gap-3">
-          <label className="min-w-[120px] pt-2 text-sm font-medium text-on-surface-variant">
+          <label className="min-w-section-lg pt-2 text-sm font-medium text-on-surface-variant">
             {key}
           </label>
           <div className="flex-1">
@@ -326,20 +311,17 @@ function ObjectEditor({
   );
 }
 
-function ArrayEditor({
-  data,
-  onChange,
-  path,
-}: {
-  data: unknown[];
-  onChange: (data: unknown[]) => void;
+interface ArrayEditorProps {
+  data: JsonArray;
+  onChange: (data: JsonArray) => void;
   path: string;
-}) {
+}
+
+function ArrayEditor({ data, onChange, path }: ArrayEditorProps) {
   const addItem = useCallback(() => {
-    if (data.length > 0 && typeof data[0] === "object" && data[0] !== null) {
-      // Clone first item with empty/default values
-      const template = data[0] as Record<string, unknown>;
-      const newItem: Record<string, unknown> = {};
+    if (data.length > 0 && typeof data[0] === "object" && data[0] !== null && !Array.isArray(data[0])) {
+      const template = data[0] as JsonObject;
+      const newItem: JsonObject = {};
       Object.keys(template).forEach((key) => {
         const val = template[key];
         if (typeof val === "string") newItem[key] = "";
@@ -362,7 +344,7 @@ function ArrayEditor({
   );
 
   const updateItem = useCallback(
-    (index: number, value: unknown) => {
+    (index: number, value: JsonValue) => {
       onChange(data.map((item, i) => (i === index ? value : item)));
     },
     [data, onChange],
@@ -373,7 +355,7 @@ function ArrayEditor({
       {data.map((item, index) => (
         <div
           key={index}
-          className="rounded-default border border-white/10 bg-white/[0.03] p-4 backdrop-blur-[20px]"
+          className="rounded-default border border-white/10 bg-white/3 p-4 backdrop-blur-[20px]"
         >
           <div className="mb-3 flex items-center justify-between">
             <span className="text-sm font-medium text-on-surface-variant">

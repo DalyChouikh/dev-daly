@@ -15,7 +15,7 @@ export function SectionWrapper({ id, children, className = "" }: SectionWrapperP
   return (
     <section
       id={id}
-      className={`mx-auto w-full max-w-[1280px] px-6 py-20 md:px-8 lg:py-30 ${className}`}
+      className={`mx-auto w-full container-max px-6 py-20 md:px-8 lg:py-section-lg ${className}`}
     >
       {children}
     </section>

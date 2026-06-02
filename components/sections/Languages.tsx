@@ -33,7 +33,7 @@ export function Languages() {
 
           return (
             <StaggerItem key={lang.name}>
-              <div className="flex items-center gap-5 rounded-default border border-white/10 bg-white/[0.03] p-5 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+              <div className="flex items-center gap-5 glass-card glass-card-hover p-5">
                 <CircularRing percentage={level.percentage} label={level.label} />
 
                 <div>

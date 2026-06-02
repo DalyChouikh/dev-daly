@@ -27,7 +27,7 @@ export function Projects() {
       >
         {projects.map((project: Project) => (
           <StaggerItem key={project.id} className="h-full">
-            <div className="group relative flex h-full flex-col rounded-default border border-white/10 bg-white/[0.03] p-6 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+            <div className="group relative flex h-full flex-col glass-card glass-card-hover p-6">
               {/* Year badge */}
               <div className="absolute right-4 top-4 font-mono text-xs text-primary">
                 {project.year}
@@ -67,7 +67,7 @@ export function Projects() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-medium text-on-surface-variant transition-colors duration-200 hover:border-primary/40 hover:text-primary"
                 >
-                  <GitHub className="h-[14px] w-[14px]" />
+                  <GitHub className="h-3.5 w-3.5" />
                   Source
                 </Link>
 

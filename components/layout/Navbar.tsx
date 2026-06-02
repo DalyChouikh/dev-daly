@@ -11,8 +11,8 @@ export function Navbar() {
   const navItems = getNavItems();
 
   return (
-    <nav className="fixed left-0 right-0 top-4 z-50 mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:left-1/2 md:right-auto md:-translate-x-1/2">
-      <div className="flex items-center justify-between rounded-full border border-white/10 bg-surface-container/80 px-4 py-2.5 backdrop-blur-[40px] md:px-6">
+    <nav className="fixed left-0 right-0 top-4 z-50 mx-auto w-[calc(100%-2rem)] container-max md:left-1/2 md:right-auto md:-translate-x-1/2">
+      <div className="flex items-center justify-between rounded-full border border-white/10 bg-surface-container/80 px-4 py-2.5 backdrop-blur-2xl md:px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-1.5">
           <span className="text-primary text-xl font-bold tracking-tight">
@@ -50,7 +50,7 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="mt-2 rounded-2xl border border-white/10 bg-surface-container/95 p-4 backdrop-blur-[40px] md:hidden">
+        <div className="mt-2 rounded-2xl border border-white/10 bg-surface-container/95 p-4 backdrop-blur-2xl md:hidden">
           <div className="flex flex-col gap-1">
             {navItems.map((item: NavItem) => (
               <NavLink key={item.id} item={item} mobile onClick={() => setIsOpen(false)} />

@@ -23,7 +23,7 @@ export function Education() {
       >
         {education.map((entry: Education) => (
           <StaggerItem key={entry.id}>
-            <div className="rounded-default border border-white/10 bg-white/[0.03] p-6 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+            <div className="glass-card glass-card-hover p-6">
               <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                 <h3 className="font-display text-lg font-bold text-on-surface">
                   {entry.institution}

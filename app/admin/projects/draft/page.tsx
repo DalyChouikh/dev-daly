@@ -120,7 +120,7 @@ export default function GitHubDraftPage() {
     }
   };
 
-  const handleChange = (field: keyof DraftProject, value: unknown) => {
+  const handleChange = (field: keyof DraftProject, value: string | string[]) => {
     if (!draft) return;
     setDraft({ ...draft, [field]: value });
   };

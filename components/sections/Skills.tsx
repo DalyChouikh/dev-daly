@@ -35,7 +35,7 @@ export function Skills() {
       >
         {skills.map((category) => (
           <StaggerItem key={category.category}>
-            <div className="rounded-default border border-white/10 bg-white/[0.03] p-6 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+            <div className="glass-card glass-card-hover p-6">
               <div className="flex items-center gap-2 text-primary">
                 {iconMap[category.icon] ?? <Code size={18} />}
                 <h3 className="font-display text-lg font-semibold text-on-surface">

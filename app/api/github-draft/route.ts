@@ -1,3 +1,4 @@
+import { getYear } from "date-fns";
 import { parseGitHubUrl, fetchRepoMetadata, fetchRepoReadme } from "@/lib/github";
 import type { DraftProject } from "@/lib/types";
 
@@ -17,10 +18,9 @@ export async function POST(request: Request) {
       fetchRepoReadme(owner, repo),
     ]);
 
-    // Extract year from createdAt
     const year = metadata.createdAt
-      ? new Date(metadata.createdAt).getFullYear().toString()
-      : new Date().getFullYear().toString();
+      ? getYear(new Date(metadata.createdAt)).toString()
+      : getYear(new Date()).toString();
 
     // Build tech stack from language + topics
     const techStack: string[] = [];

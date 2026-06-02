@@ -194,3 +194,11 @@ export const DraftProjectSchema = z.object({
   bullets: z.array(z.string()),
 });
 export type DraftProject = z.infer<typeof DraftProjectSchema>;
+
+/** Recursive JSON value type hierarchy — replaces unsafe `unknown` in generic editors */
+export type JsonPrimitive = string | number | boolean | null;
+export interface JsonObject {
+  [key: string]: JsonValue;
+}
+export type JsonArray = Array<JsonValue>;
+export type JsonValue = JsonPrimitive | JsonObject | JsonArray;

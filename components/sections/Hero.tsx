@@ -16,7 +16,7 @@ export function Hero() {
       {/* Subtle background glow on right side */}
       <div className="pointer-events-none absolute right-0 top-1/4 h-125 w-125 -translate-y-1/2 rounded-full bg-primary/4 blur-[120px]" />
 
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-12 md:flex-row md:gap-16">
+      <div className="mx-auto flex w-full container-max flex-col items-center gap-12 md:flex-row md:gap-16">
         {/* Left Content */}
         <div className="flex flex-1 flex-col items-start">
           <AnimatedSection>
