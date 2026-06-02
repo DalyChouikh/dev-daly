@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Deployment Guide
 
-## Getting Started
+## Prerequisites
 
-First, run the development server:
+- [Vercel CLI](https://vercel.com/docs/cli) installed globally
+- GitHub account with this repo pushed
+- Environment variables configured
+
+## Environment Variables
+
+Copy `.env.local.example` to `.env.local` and fill in:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ADMIN_PASSWORD` | Yes | Password for `/admin` panel access |
+| `GITHUB_TOKEN` | No | Personal access token for admin commits |
+| `GITHUB_REPO_OWNER` | No | Your GitHub username |
+| `GITHUB_REPO_NAME` | No | This repo name |
+| `OPENROUTER_API_KEY` | No | For AI-enhanced project drafts |
+| `OPENROUTER_MODEL` | No | e.g. `openai/gpt-4o` |
+| `EMAIL_PROVIDER` | No | `mailhog` (dev) / `resend` / `gmail` |
+| `CONTACT_EMAIL` | No | Where contact form submissions go |
+| `RESEND_API_KEY` | No | Required if `EMAIL_PROVIDER=resend` |
+| `GMAIL_USER` | No | Required if `EMAIL_PROVIDER=gmail` |
+| `GMAIL_APP_PASSWORD` | No | Required if `EMAIL_PROVIDER=gmail` |
+
+## Deploy to Vercel
+
+### Option 1: Vercel Dashboard (Recommended)
+
+1. Go to [vercel.com/new](https://vercel.com/new)
+2. Import your GitHub repository
+3. Add environment variables from above
+4. Deploy
+
+### Option 2: Vercel CLI
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Install Vercel CLI if not already installed
+npm i -g vercel
+
+# Login
+vercel login
+
+# Deploy
+vercel --prod
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Option 3: Git Integration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Push to `main` branch. Vercel auto-deploys on every push.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Post-Deploy Setup
 
-## Learn More
+1. **Update site URL**: After first deploy, update `NEXT_PUBLIC_SITE_URL` env var with your Vercel domain
+2. **Update portfolio link**: Edit `data/profile.json` and set `socialLinks.portfolio` to your new URL
+3. **Custom domain** (optional): Add custom domain in Vercel project settings
 
-To learn more about Next.js, take a look at the following resources:
+## Admin Panel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Access `/admin` on your deployed site. Login with the `ADMIN_PASSWORD` you set.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Updating Content
 
-## Deploy on Vercel
+1. **Via Admin Panel**: Go to `/admin`, edit sections, save changes
+2. **Via Git**: Edit JSON files in `data/` folder and push — auto-deploys
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Troubleshooting
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Admin login fails**: Check `ADMIN_PASSWORD` env var is set
+- **GitHub draft fails**: Ensure `GITHUB_TOKEN` has `repo` scope
+- **Contact form fails**: Check email provider config and API keys
