@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { Resend } from "resend";
+import { buildContactEmailHtml, buildContactEmailText } from "./email-template";
 import type { ContactForm } from "./types";
 
 /** Email provider type — switch via EMAIL_PROVIDER env var */
@@ -36,7 +37,8 @@ async function sendViaMailHog(form: ContactForm): Promise<{ id: string }> {
     from: `"${form.name}" <${form.email}>`,
     to: process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com",
     subject: `Portfolio Contact: ${form.name}`,
-    text: `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
+    text: buildContactEmailText(form),
+    html: buildContactEmailHtml(form),
     replyTo: form.email,
   });
 
@@ -55,7 +57,8 @@ async function sendViaResend(form: ContactForm): Promise<{ id: string }> {
     from: "Portfolio <onboarding@resend.dev>",
     to: [process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com"],
     subject: `Portfolio Contact: ${form.name}`,
-    text: `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
+    text: buildContactEmailText(form),
+    html: buildContactEmailHtml(form),
     replyTo: form.email,
   });
 
@@ -80,7 +83,8 @@ async function sendViaGmail(form: ContactForm): Promise<{ id: string }> {
     from: process.env.GMAIL_USER,
     to: process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com",
     subject: `Portfolio Contact: ${form.name}`,
-    text: `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
+    text: buildContactEmailText(form),
+    html: buildContactEmailHtml(form),
     replyTo: form.email,
   });
 
