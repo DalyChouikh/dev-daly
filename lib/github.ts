@@ -108,6 +108,38 @@ export async function fetchRepoReadme(
 }
 
 /**
+ * Gets the current SHA of a file in the GitHub repository.
+ * Returns undefined if the file does not exist.
+ */
+export async function getFileSha(path: string): Promise<string | undefined> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return undefined;
+
+  const owner = process.env.GITHUB_REPO_OWNER;
+  const repo = process.env.GITHUB_REPO_NAME;
+  if (!owner || !repo) return undefined;
+
+  try {
+    const response = await fetch(
+      `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=main`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      },
+    );
+
+    if (!response.ok) return undefined;
+
+    const data = await response.json() as { sha?: string };
+    return data.sha;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Commits a file to the GitHub repository using the Contents API.
  * Requires GITHUB_TOKEN with repo scope.
  */
@@ -133,6 +165,64 @@ export async function commitFile(
   const body: Record<string, string> = {
     message,
     content: Buffer.from(content).toString("base64"),
+    branch: "main",
+  };
+
+  if (sha) {
+    body.sha = sha;
+  }
+
+  const response = await fetch(
+    `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    },
+  );
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(
+      `GitHub Contents API error: ${response.status} ${errorBody}`,
+    );
+  }
+
+  const data: GitHubCommitResponse = await response.json();
+  return data.commit?.sha ?? `commit-${Date.now()}`;
+}
+
+/**
+ * Commits a base64-encoded binary file to the GitHub repository.
+ * Used for uploading binary assets like PDF resumes or images.
+ */
+export async function commitBinaryFile(
+  path: string,
+  base64Content: string,
+  message: string,
+): Promise<string> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) {
+    throw new Error("GITHUB_TOKEN environment variable is not set");
+  }
+
+  const owner = process.env.GITHUB_REPO_OWNER;
+  const repo = process.env.GITHUB_REPO_NAME;
+  if (!owner || !repo) {
+    throw new Error(
+      "GITHUB_REPO_OWNER and GITHUB_REPO_NAME environment variables are not set",
+    );
+  }
+
+  const sha = await getFileSha(path);
+
+  const body: Record<string, string> = {
+    message,
+    content: base64Content,
     branch: "main",
   };
 

@@ -12,8 +12,11 @@ import {
   Globe,
   Settings,
   Plus,
+  FileText,
+  Upload,
 } from "lucide-react";
 import { GitHub } from "@/components/ui/icons/GitHub";
+import { ResumeUploader } from "@/components/admin/ResumeUploader";
 
 const sections = [
   { id: "profile", label: "Profile", icon: <User size={20} />, count: null },
@@ -52,6 +55,33 @@ export default function AdminDashboardPage() {
           description="Auto-generate from GitHub repo"
           primary
         />
+        <QuickActionCard
+          href="#resume"
+          icon={<Upload size={20} />}
+          label="Upload Resume"
+          description="Replace your PDF resume"
+        />
+      </div>
+
+      {/* Resume Management */}
+      <div className="mt-10">
+        <h2 className="mb-4 font-display text-lg font-semibold text-on-surface">
+          Resume
+        </h2>
+        <div className="glass-card glass-card-hover p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary">
+              <FileText size={20} />
+            </div>
+            <div>
+              <h3 className="font-semibold text-on-surface">Upload Resume</h3>
+              <p className="text-sm text-on-surface-variant">
+                PDF only, max 10 MB. Replaces the current /resume.pdf.
+              </p>
+            </div>
+          </div>
+          <ResumeUploader currentResumeUrl="/resume.pdf" />
+        </div>
       </div>
 
       {/* Section Grid */}
