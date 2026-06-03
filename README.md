@@ -102,7 +102,7 @@ Push to `main` branch. Vercel auto-deploys on every push.
 
 ## Post-Deploy Setup
 
-1. **Update site URL**: After first deploy, update `NEXT_PUBLIC_SITE_URL` env var with your Vercel domain
+1. **Update site URL**: After first deploy, update `NEXT_PUBLIC_APP_URL` env var with your Vercel domain
 2. **Update portfolio link**: Edit `data/profile.json` and set `socialLinks.portfolio` to your new URL
 3. **Custom domain** (optional): Add custom domain in Vercel project settings
 

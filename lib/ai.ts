@@ -15,7 +15,7 @@ function createAIClient(): OpenAI {
     baseURL: "https://openrouter.ai/api/v1",
     apiKey,
     defaultHeaders: {
-      "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL ?? "https://localhost:3000",
+      "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000",
       "X-Title": "Portfolio Admin",
     },
   });

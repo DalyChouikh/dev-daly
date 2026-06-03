@@ -5,7 +5,7 @@ import type { ContactForm } from "./types";
  * Uses inline styles and table-based layout for maximum email client compatibility.
  */
 export function buildContactEmailHtml(form: ContactForm): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://localhost:3000";
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000";
   const portfolioName = "Mohamed Ali Chouikh";
   const portfolioTitle = "Software & AI Engineer";
   const accentColor = "#4be277";
@@ -187,7 +187,7 @@ export function buildContactEmailHtml(form: ContactForm): string {
  * Generates a plain text fallback for email clients that don't support HTML.
  */
 export function buildContactEmailText(form: ContactForm): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://localhost:3000";
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000";
   const timestamp = new Date().toLocaleString("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
