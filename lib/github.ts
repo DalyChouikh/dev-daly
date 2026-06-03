@@ -162,14 +162,17 @@ export async function commitFile(
     );
   }
 
+  // Fetch SHA if not provided — required for updating existing files
+  const fileSha = sha ?? (await getFileSha(path));
+
   const body: Record<string, string> = {
     message,
     content: Buffer.from(content).toString("base64"),
     branch: "main",
   };
 
-  if (sha) {
-    body.sha = sha;
+  if (fileSha) {
+    body.sha = fileSha;
   }
 
   const response = await fetch(
