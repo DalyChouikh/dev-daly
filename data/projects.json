@@ -147,7 +147,10 @@
     "tagline": "A high-performance, multi-tenant bulk email automation platform designed for scalability and user-friendly campaign management.",
     "techStack": [
       "TypeScript",
-      "Go"
+      "Go",
+      "React",
+      "TanStack",
+      "Docker"
     ],
     "year": "2025",
     "githubUrl": "https://github.com/DalyChouikh/swift-merge",
