@@ -64,7 +64,8 @@
     "title": "ai-copilot-tool",
     "tagline": "An AI-powered task management board that lets you orchestrate workflows using natural language.",
     "techStack": [
-      "TypeScript"
+      "TypeScript",
+      "Next.js"
     ],
     "year": "2025",
     "githubUrl": "https://github.com/DalyChouikh/ai-copilot-tool",
@@ -102,7 +103,10 @@
     "title": "shooply",
     "tagline": "An editorial, AI-powered multi-vendor marketplace designed for seamless vertical discovery.",
     "techStack": [
-      "TypeScript"
+      "TypeScript",
+      "Next.js",
+      "Docker",
+      "Meilisearch"
     ],
     "year": "2026",
     "githubUrl": "https://github.com/DalyChouikh/shooply",
@@ -121,7 +125,9 @@
     "title": "issatso-university",
     "tagline": "A comprehensive, AI-integrated academic management ecosystem tailored for university-wide administration.",
     "techStack": [
-      "TypeScript"
+      "TypeScript",
+      "NestJS",
+      "React.js"
     ],
     "year": "2026",
     "githubUrl": "https://github.com/DalyChouikh/issatso-university",
