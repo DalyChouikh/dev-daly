@@ -6,6 +6,32 @@
 - GitHub account with this repo pushed
 - Environment variables configured
 
+## GitHub Token Setup
+
+A GitHub token is **required** for the admin panel to save changes and upload resumes.
+
+### Generate a Personal Access Token
+
+1. Go to [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Click **"Generate new token"** → **"Generate new token (Classic)"**
+3. Enter a note: e.g., `Portfolio Admin`
+4. Set expiration (90 days recommended)
+5. Check the **`repo`** scope (full repository access)
+6. Click **Generate token** and **copy it immediately**
+
+### Add Token to Environment
+
+```bash
+# In .env.local (local development)
+GITHUB_TOKEN=ghp_your_token_here
+GITHUB_REPO_OWNER=your-username
+GITHUB_REPO_NAME=your-repo-name
+```
+
+For production, add these to your Vercel dashboard under **Project Settings → Environment Variables**.
+
+---
+
 ## Environment Variables
 
 Copy `.env.local.example` to `.env.local` and fill in:
@@ -23,6 +49,30 @@ Copy `.env.local.example` to `.env.local` and fill in:
 | `RESEND_API_KEY` | No | Required if `EMAIL_PROVIDER=resend` |
 | `GMAIL_USER` | No | Required if `EMAIL_PROVIDER=gmail` |
 | `GMAIL_APP_PASSWORD` | No | Required if `EMAIL_PROVIDER=gmail` |
+
+## Local Email Testing (MailHog)
+
+For local development, use MailHog to test the contact form without sending real emails.
+
+### Start MailHog
+
+```bash
+# Start the container
+docker compose up -d
+
+# Access the web UI to view captured emails
+open http://localhost:8025
+```
+
+MailHog runs:
+- **SMTP Server**: `localhost:1025` (no authentication required)
+- **Web UI**: `http://localhost:8025`
+
+Set `EMAIL_PROVIDER=mailhog` in your `.env.local`.
+
+To stop: `docker compose down`
+
+---
 
 ## Deploy to Vercel
 

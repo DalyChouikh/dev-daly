@@ -1,0 +1,32 @@
+# Docker Compose for local email testing with MailHog
+# Usage: docker compose up -d
+# Access UI: http://localhost:8025
+# SMTP: localhost:1025 (no auth required)
+
+services:
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: portfolio-mailhog
+    ports:
+      # SMTP server (for sending emails from your app)
+      - "1025:1025"
+      # Web UI (for viewing captured emails)
+      - "8025:8025"
+    environment:
+      # Optional: custom storage path inside container
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /tmp/mailhog
+    volumes:
+      # Persist emails across container restarts
+      - mailhog-data:/tmp/mailhog
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8025"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  mailhog-data:
+    driver: local
