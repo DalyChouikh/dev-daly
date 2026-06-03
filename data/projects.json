@@ -77,5 +77,23 @@
       "Built a modular architecture with TypeScript to support extensible AI tool definitions and state management.",
       "Styled a modern, accessible interface leveraging Tailwind CSS and shadcn/ui components for consistent design."
     ]
+  },
+  {
+    "id": "DalyChouikh-fundrise",
+    "title": "fundrise",
+    "tagline": "A robust financial tracking and investment visualization platform.",
+    "techStack": [
+      "TypeScript"
+    ],
+    "year": "2026",
+    "githubUrl": "https://github.com/DalyChouikh/fundrise",
+    "liveUrl": "",
+    "bullets": [
+      "A sophisticated investment management tool built with TypeScript that provides users with precise analytics and portfolio tracking capabilities. This project emphasizes clean code architecture and efficient data handling to simplify complex financial monitoring.",
+      "Implemented type-safe data structures using TypeScript to ensure reliable financial calculations.",
+      "Engineered scalable architecture to handle complex investment portfolio modeling.",
+      "Integrated modern development patterns to streamline data processing and state management.",
+      "Optimized application performance for real-time tracking of asset growth and performance metrics."
+    ]
   }
 ]
