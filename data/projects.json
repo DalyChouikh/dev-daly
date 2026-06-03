@@ -79,21 +79,22 @@
     ]
   },
   {
-    "id": "DalyChouikh-fundrise",
-    "title": "fundrise",
-    "tagline": "A robust financial tracking and investment visualization platform.",
+    "id": "DalyChouikh-delify",
+    "title": "delify",
+    "tagline": "A production-grade, feature-rich Discord music bot built with Go and Lavalink v4.",
     "techStack": [
-      "TypeScript"
+      "Go"
     ],
-    "year": "2026",
-    "githubUrl": "https://github.com/DalyChouikh/fundrise",
+    "year": "2025",
+    "githubUrl": "https://github.com/DalyChouikh/delify",
     "liveUrl": "",
     "bullets": [
-      "A sophisticated investment management tool built with TypeScript that provides users with precise analytics and portfolio tracking capabilities. This project emphasizes clean code architecture and efficient data handling to simplify complex financial monitoring.",
-      "Implemented type-safe data structures using TypeScript to ensure reliable financial calculations.",
-      "Engineered scalable architecture to handle complex investment portfolio modeling.",
-      "Integrated modern development patterns to streamline data processing and state management.",
-      "Optimized application performance for real-time tracking of asset growth and performance metrics."
+      "Delify is a robust Discord music bot designed for high-fidelity audio streaming, featuring an intuitive slash command interface and interactive playback controls. Built with Go, it leverages Lavalink for efficient audio processing and provides a production-ready foundation with automated CI/CD workflows.",
+      "Engineered a high-performance Discord music bot in Go, featuring seamless playback and interactive UI components.",
+      "Integrated Lavalink v4 and LavaSrc to support YouTube and Spotify streaming with advanced queue management.",
+      "Implemented a modern slash command interface paired with real-time lyrics fetching, caching, and paginated displays.",
+      "Designed a clean, maintainable architecture with robust error handling and graceful shutdown capabilities.",
+      "Automated production deployments using multi-stage Docker builds and CI/CD pipelines for Fly.io, GCP, and Azure."
     ]
   }
 ]
