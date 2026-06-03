@@ -54,7 +54,7 @@ async function sendViaResend(form: ContactForm): Promise<{ id: string }> {
 
   const resend = new Resend(apiKey);
   const { data, error } = await resend.emails.send({
-    from: "Portfolio <onboarding@resend.dev>",
+    from: "Portfolio <contact@dev-daly.tn>",
     to: [process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com"],
     subject: `Portfolio Contact: ${form.name}`,
     text: buildContactEmailText(form),
