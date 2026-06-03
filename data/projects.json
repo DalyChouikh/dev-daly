@@ -3,7 +3,10 @@
     "id": "drawly",
     "title": "Drawly",
     "tagline": "Real-Time Collaborative Whiteboard",
-    "techStack": ["Java", "Java RMI"],
+    "techStack": [
+      "Java",
+      "Java RMI"
+    ],
     "year": "2025",
     "githubUrl": "https://github.com/DalyChouikh/drawly",
     "liveUrl": "",
@@ -16,7 +19,9 @@
     "id": "hackwarts-chouflihal",
     "title": "Hackwarts 2.0 & Choufli Hal 2.0",
     "tagline": "Hackathon Registration Portals",
-    "techStack": ["Next.js"],
+    "techStack": [
+      "Next.js"
+    ],
     "year": "2025",
     "githubUrl": "https://github.com/Google-Developer-Student-Clubs-ISSATSo/Hackwarts-2.0",
     "liveUrl": "",
@@ -28,7 +33,10 @@
     "id": "url-shortener",
     "title": "URL Shortener",
     "tagline": "Campus Link Management Tool",
-    "techStack": ["Go", "React"],
+    "techStack": [
+      "Go",
+      "React"
+    ],
     "year": "2024",
     "githubUrl": "https://github.com/DalyChouikh/url-shortener",
     "liveUrl": "",
@@ -40,12 +48,34 @@
     "id": "task-flow",
     "title": "Task Flow",
     "tagline": "Android Task Management App",
-    "techStack": ["Android Java", "Spring Boot"],
+    "techStack": [
+      "Android Java",
+      "Spring Boot"
+    ],
     "year": "2023",
     "githubUrl": "https://github.com/DalyChouikh/todo-app",
     "liveUrl": "",
     "bullets": [
       "Built an Android task-management application with a user-friendly mobile interface and Spring Boot backend."
+    ]
+  },
+  {
+    "id": "DalyChouikh-ai-copilot-tool",
+    "title": "ai-copilot-tool",
+    "tagline": "An AI-powered task management board that lets you orchestrate workflows using natural language.",
+    "techStack": [
+      "TypeScript"
+    ],
+    "year": "2025",
+    "githubUrl": "https://github.com/DalyChouikh/ai-copilot-tool",
+    "liveUrl": "https://ai-copilot-tool.vercel.app",
+    "bullets": [
+      "Within is a sophisticated task management application that transforms project workflows through an integrated AI copilot. By leveraging Claude's tool-use capabilities, users can intuitively manage boards, perform bulk operations, and generate data insights using simple conversational prompts.",
+      "Integrated Claude API using function calling to enable complex CRUD operations via natural language commands.",
+      "Engineered a responsive Kanban board using React, Zustand, and dnd-kit for seamless task visualization.",
+      "Implemented automated bulk actions, including multi-card labeling and board summary generation, to streamline productivity.",
+      "Built a modular architecture with TypeScript to support extensible AI tool definitions and state management.",
+      "Styled a modern, accessible interface leveraging Tailwind CSS and shadcn/ui components for consistent design."
     ]
   }
 ]
