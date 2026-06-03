@@ -19,14 +19,14 @@ async function sendViaMailHog(form: ContactForm): Promise<{ id: string }> {
   const host = process.env.MAILHOG_HOST ?? "localhost";
   const port = Number(process.env.MAILHOG_PORT ?? "1025");
 
+  const user = process.env.MAILHOG_USER;
+  const pass = process.env.MAILHOG_PASS;
+
   const transporter = nodemailer.createTransport({
     host,
     port,
     secure: false, // MailHog does not use TLS
-    auth: {
-      user: process.env.MAILHOG_USER ?? "",
-      pass: process.env.MAILHOG_PASS ?? "",
-    },
+    ...(user && pass ? { auth: { user, pass } } : {}),
     tls: {
       rejectUnauthorized: false,
     },
