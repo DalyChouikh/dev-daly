@@ -61,7 +61,7 @@
   },
   {
     "id": "DalyChouikh-ai-copilot-tool",
-    "title": "ai-copilot-tool",
+    "title": "Ai Copilot Tool",
     "tagline": "An AI-powered task management board that lets you orchestrate workflows using natural language.",
     "techStack": [
       "TypeScript",
@@ -81,7 +81,7 @@
   },
   {
     "id": "DalyChouikh-delify",
-    "title": "delify",
+    "title": "Delify",
     "tagline": "A production-grade, feature-rich Discord music bot built with Go and Lavalink v4.",
     "techStack": [
       "Go"
@@ -100,7 +100,7 @@
   },
   {
     "id": "DalyChouikh-shooply",
-    "title": "shooply",
+    "title": "Shooply",
     "tagline": "An editorial, AI-powered multi-vendor marketplace designed for seamless vertical discovery.",
     "techStack": [
       "TypeScript",
@@ -122,7 +122,7 @@
   },
   {
     "id": "DalyChouikh-issatso-university",
-    "title": "issatso-university",
+    "title": "ISSATSo University Portal",
     "tagline": "A comprehensive, AI-integrated academic management ecosystem tailored for university-wide administration.",
     "techStack": [
       "TypeScript",
@@ -143,7 +143,7 @@
   },
   {
     "id": "DalyChouikh-swift-merge",
-    "title": "swift-merge",
+    "title": "Swift Merge",
     "tagline": "A high-performance, multi-tenant bulk email automation platform designed for scalability and user-friendly campaign management.",
     "techStack": [
       "TypeScript",
@@ -166,7 +166,7 @@
   },
   {
     "id": "DalyChouikh-fundrise",
-    "title": "fundrise",
+    "title": "Funderise",
     "tagline": "A collaborative crowdfunding platform connecting startup founders with investors through an AI-powered ecosystem.",
     "techStack": [
       "TypeScript",
@@ -179,7 +179,7 @@
     "githubUrl": "https://github.com/DalyChouikh/fundrise/",
     "liveUrl": "",
     "bullets": [
-      "Funderaise is a sophisticated SaaS crowdfunding platform that bridges the gap between startup founders and investors. It features an intelligent AI agent for automated project management and real-time collaboration tools, all built within a type-safe TypeScript and Django environment.",
+      "Funderise is a sophisticated SaaS crowdfunding platform that bridges the gap between startup founders and investors. It features an intelligent AI agent for automated project management and real-time collaboration tools, all built within a type-safe TypeScript and Django environment.",
       "Orchestrates a full-stack architecture using a Django REST API, React frontend, and managed PostgreSQL via Supabase.",
       "Integrated an advanced AI Copilot leveraging OpenRouter with 30+ custom tools for automated task management, data analysis, and insight generation.",
       "Engineered real-time collaboration features including Kanban boards and live messaging powered by Django Channels and Redis.",
@@ -189,10 +189,12 @@
   },
   {
     "id": "DalyChouikh-qr-code-generator",
-    "title": "qr-code-generator",
+    "title": "QR Code Generator",
     "tagline": "An interactive, terminal-based QR code generator with support for multi-format output and smart content templates.",
     "techStack": [
-      "Go"
+      "Go",
+      "TUI",
+      "CLI"
     ],
     "year": "2026",
     "githubUrl": "https://github.com/DalyChouikh/qr-code-generator",
