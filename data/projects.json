@@ -96,5 +96,24 @@
       "Designed a clean, maintainable architecture with robust error handling and graceful shutdown capabilities.",
       "Automated production deployments using multi-stage Docker builds and CI/CD pipelines for Fly.io, GCP, and Azure."
     ]
+  },
+  {
+    "id": "DalyChouikh-shooply",
+    "title": "shooply",
+    "tagline": "An editorial, AI-powered multi-vendor marketplace designed for seamless vertical discovery.",
+    "techStack": [
+      "TypeScript"
+    ],
+    "year": "2026",
+    "githubUrl": "https://github.com/DalyChouikh/shooply",
+    "liveUrl": "",
+    "bullets": [
+      "Shooply is a modern, magazine-style e-commerce platform that blends editorial aesthetics with advanced AI-driven personalization. It features a full-bleed discovery feed, semantic search, and a complete multi-vendor ecosystem built on a scalable, event-driven architecture.",
+      "Engineered a high-performance, headless e-commerce experience using Next.js 16, React 19, and Tailwind CSS.",
+      "Implemented a sophisticated hybrid AI recommendation engine combining cosine similarity, trending metrics, and diversity-weighted sampling.",
+      "Integrated semantic and visual search capabilities using Gemini multimodal embeddings and Meilisearch for ultra-fast, typo-tolerant retrieval.",
+      "Built a robust, event-driven order processing pipeline with support for multi-vendor order splitting and idempotent payment transactions.",
+      "Developed a comprehensive admin dashboard featuring real-time observability via Server-Sent Events (SSE) and A/B testing infrastructure."
+    ]
   }
 ]
