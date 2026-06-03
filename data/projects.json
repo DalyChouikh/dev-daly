@@ -140,7 +140,8 @@
     "title": "swift-merge",
     "tagline": "A high-performance, multi-tenant bulk email automation platform designed for scalability and user-friendly campaign management.",
     "techStack": [
-      "TypeScript"
+      "TypeScript",
+      "Go"
     ],
     "year": "2025",
     "githubUrl": "https://github.com/DalyChouikh/swift-merge",
