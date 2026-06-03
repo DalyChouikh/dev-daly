@@ -14,27 +14,33 @@ function getProvider(): EmailProvider {
   return provider as EmailProvider;
 }
 
-/** MailHog client for local development */
+/** MailHog client for local development — sends via SMTP to MailHog's catch-all server */
 async function sendViaMailHog(form: ContactForm): Promise<{ id: string }> {
   const host = process.env.MAILHOG_HOST ?? "localhost";
-  const port = process.env.MAILHOG_PORT ?? "1025";
+  const port = Number(process.env.MAILHOG_PORT ?? "1025");
 
-  const response = await fetch(`http://${host}:${port}/api/v1/send`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: form.email,
-      to: [process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com"],
-      subject: `Portfolio Contact: ${form.name}`,
-      text: form.message,
-    }),
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: false, // MailHog does not use TLS
+    auth: {
+      user: process.env.MAILHOG_USER ?? "",
+      pass: process.env.MAILHOG_PASS ?? "",
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
 
-  if (!response.ok) {
-    throw new Error(`MailHog error: ${response.status}`);
-  }
+  const result = await transporter.sendMail({
+    from: `"${form.name}" <${form.email}>`,
+    to: process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com",
+    subject: `Portfolio Contact: ${form.name}`,
+    text: `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
+    replyTo: form.email,
+  });
 
-  return { id: `mailhog-${Date.now()}` };
+  return { id: result.messageId ?? `mailhog-${Date.now()}` };
 }
 
 /** Resend client for production */

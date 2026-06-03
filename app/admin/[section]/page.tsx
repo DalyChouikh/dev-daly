@@ -18,13 +18,6 @@ const sectionMap: Record<string, string> = {
   site: "site",
 };
 
-/**
- * Parses a JSON value from a fetch response.
- * Used during initial data load before type narrowing.
- */
-function parseJson(json: string): JsonValue {
-  return JSON.parse(json) as JsonValue;
-}
 
 export default function SectionEditorPage() {
   const params = useParams();
@@ -42,9 +35,15 @@ export default function SectionEditorPage() {
   useState(() => {
     const loadData = async () => {
       try {
-        const response = await fetch(`/data/${sectionName}.json`);
-        const raw = await response.text();
-        setData(parseJson(raw));
+        const response = await fetch(`/api/admin/data/${sectionName}`);
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          setError(result.error ?? "Failed to load data");
+          return;
+        }
+
+        setData(result.data as JsonValue);
       } catch {
         setError("Failed to load data");
       } finally {
