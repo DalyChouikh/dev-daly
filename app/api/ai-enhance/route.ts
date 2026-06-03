@@ -8,9 +8,10 @@ import type { AIEnhanceRequest } from "@/lib/types";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { projectName, description, readmeContent, techStack } = body as AIEnhanceRequest;
+    const { originalTitle, projectName, description, readmeContent, techStack } = body as AIEnhanceRequest;
 
     const result = await enhanceProjectDraft({
+      originalTitle,
       projectName,
       description,
       readmeContent,

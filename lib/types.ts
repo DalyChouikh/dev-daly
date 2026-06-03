@@ -154,6 +154,7 @@ export type GitHubDraftRequest = z.infer<typeof GitHubDraftRequestSchema>;
 
 /** AI enhance request */
 export const AIEnhanceRequestSchema = z.object({
+  originalTitle: z.string(),
   projectName: z.string(),
   description: z.string(),
   readmeContent: z.string(),
@@ -163,7 +164,9 @@ export type AIEnhanceRequest = z.infer<typeof AIEnhanceRequestSchema>;
 
 /** AI enhance response */
 export const AIEnhanceResponseSchema = z.object({
+  title: z.string(),
   tagline: z.string(),
+  techStack: z.array(z.string()),
   bullets: z.array(z.string()),
   enhancedDescription: z.string(),
 });

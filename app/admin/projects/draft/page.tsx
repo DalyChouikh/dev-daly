@@ -65,6 +65,7 @@ export default function GitHubDraftPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          originalTitle: draftState.draft.title,
           projectName: draftState.draft.title,
           description: draftState.draft.tagline,
           readmeContent: draftState.readmeContent,
@@ -81,24 +82,22 @@ export default function GitHubDraftPage() {
       }
 
       const result = data.result;
-      const newBullets: string[] = [];
 
-      // Use enhancedDescription as first bullet if available
-      if (result.enhancedDescription) {
-        newBullets.push(result.enhancedDescription);
-      }
-
-      // Append AI-generated bullets
-      if (result.bullets && result.bullets.length > 0) {
-        newBullets.push(...result.bullets);
-      }
+      // Append AI content to existing bullets (keep originals, don't replace)
+      const appendedBullets = [
+        ...draftState.draft.bullets,
+        ...(result.enhancedDescription ? [result.enhancedDescription] : []),
+        ...(result.bullets ?? []),
+      ];
 
       setDraftState({
         ...draftState,
         draft: {
           ...draftState.draft,
+          title: result.title ?? draftState.draft.title,
           tagline: result.tagline ?? draftState.draft.tagline,
-          bullets: newBullets.length > 0 ? newBullets : draftState.draft.bullets,
+          techStack: result.techStack ?? draftState.draft.techStack,
+          bullets: appendedBullets,
         },
       });
     } catch {
