@@ -98,41 +98,60 @@
     ]
   },
   {
-    "id": "DalyChouikh-fundrise",
-    "title": "fundrise",
-    "tagline": "A collaborative, AI-powered crowdfunding platform bridging the gap between startup founders and investors.",
+    "id": "DalyChouikh-shooply",
+    "title": "shooply",
+    "tagline": "An editorial, AI-powered multi-vendor marketplace designed for seamless vertical discovery.",
     "techStack": [
       "TypeScript"
     ],
     "year": "2026",
-    "githubUrl": "https://github.com/DalyChouikh/fundrise",
+    "githubUrl": "https://github.com/DalyChouikh/shooply",
     "liveUrl": "",
     "bullets": [
-      "Funderaise is a modern, full-stack SaaS platform designed to centralize the startup fundraising lifecycle. It combines real-time collaboration tools with an AI-driven agent to help founders launch campaigns and investors discover opportunities seamlessly.",
-      "Orchestrated a full-stack architecture using a high-performance Django API backend and a type-safe React frontend.",
-      "Integrated a sophisticated AI Copilot capable of tool-calling, real-time data visualization, and autonomous task management.",
-      "Engineered real-time collaboration features including Kanban boards and messaging using Django Channels and WebSockets.",
-      "Implemented secure, role-based access control and passwordless authentication leveraging Supabase Auth and WebAuthn.",
-      "Streamlined complex workflows with a multi-role dashboard system for managing campaigns, milestones, and investments."
+      "Shooply is a modern, magazine-style e-commerce platform that blends editorial aesthetics with advanced AI-driven personalization. It features a full-bleed discovery feed, semantic search, and a complete multi-vendor ecosystem built on a scalable, event-driven architecture.",
+      "Engineered a high-performance, headless e-commerce experience using Next.js 16, React 19, and Tailwind CSS.",
+      "Implemented a sophisticated hybrid AI recommendation engine combining cosine similarity, trending metrics, and diversity-weighted sampling.",
+      "Integrated semantic and visual search capabilities using Gemini multimodal embeddings and Meilisearch for ultra-fast, typo-tolerant retrieval.",
+      "Built a robust, event-driven order processing pipeline with support for multi-vendor order splitting and idempotent payment transactions.",
+      "Developed a comprehensive admin dashboard featuring real-time observability via Server-Sent Events (SSE) and A/B testing infrastructure."
     ]
   },
   {
-    "id": "DalyChouikh-qr-code-generator",
-    "title": "qr-code-generator",
-    "tagline": "An interactive, feature-rich terminal CLI for generating custom QR codes.",
+    "id": "DalyChouikh-issatso-university",
+    "title": "issatso-university",
+    "tagline": "A comprehensive, AI-integrated academic management ecosystem tailored for university-wide administration.",
     "techStack": [
-      "Go"
+      "TypeScript"
     ],
     "year": "2026",
-    "githubUrl": "https://github.com/DalyChouikh/qr-code-generator",
+    "githubUrl": "https://github.com/DalyChouikh/issatso-university",
     "liveUrl": "",
     "bullets": [
-      "A robust, terminal-based QR code generator built in Go that streamlines the creation process through an interactive TUI. It provides powerful features like smart content templates, custom styling, and history tracking, making it an essential tool for developers and power users.",
-      "Implemented a user-friendly wizard using Bubbletea for seamless QR code creation.",
-      "Engineered support for diverse content types including WiFi credentials, vCards, SMS, and URLs.",
-      "Developed advanced customization features like custom hex color selection and flexible image dimensions.",
-      "Integrated a local history management system allowing users to quickly access and re-generate past QR codes.",
-      "Optimized cross-platform distribution with Go, offering native binaries and integrated self-updating capabilities."
+      "A full-stack university management platform designed to streamline academic operations, from curriculum planning and teacher assignments to student grade tracking. The system leverages AI-driven tools to enhance the student experience while providing administrators with a secure, high-performance management interface.",
+      "Architected a scalable monorepo using Turborepo and pnpm to manage complex academic workflows.",
+      "Engineered a secure authentication system featuring JWT-based sessions and modern WebAuthn passkey support.",
+      "Integrated real-time AI assistance via OpenRouter and WebSockets to provide students with personalized academic insights and grade simulations.",
+      "Implemented a robust role-based access control system to manage administrative, departmental, and faculty-level data.",
+      "Optimized data operations with Prisma ORM and PostgreSQL to handle complex academic hierarchies like UEs, ECUEs, and semester deliberations."
+    ]
+  },
+  {
+    "id": "DalyChouikh-swift-merge",
+    "title": "swift-merge",
+    "tagline": "A high-performance, multi-tenant bulk email automation platform designed for scalability and user-friendly campaign management.",
+    "techStack": [
+      "TypeScript"
+    ],
+    "year": "2025",
+    "githubUrl": "https://github.com/DalyChouikh/swift-merge",
+    "liveUrl": "",
+    "bullets": [
+      "SwiftMerge is a comprehensive email automation tool that streamlines bulk messaging through a powerful Go-based backend and a modern React interface. It provides users with advanced features like campaign monitoring, media management, and intelligent rate-limiting to ensure reliable delivery at scale.",
+      "Engineered a robust backend with Go and PostgreSQL featuring a concurrent worker pool for high-throughput email delivery.",
+      "Integrated Google OAuth2 and multi-provider SMTP support to enable seamless, secure email sending workflows.",
+      "Developed a dynamic visual template editor with real-time variable mapping and CSV validation for personalized outreach.",
+      "Implemented secure multi-tenancy with AES-256-GCM encryption to ensure data privacy and user isolation.",
+      "Architected a responsive frontend using React 19, Tailwind CSS, and TanStack Query for an optimized user experience."
     ]
   }
 ]
