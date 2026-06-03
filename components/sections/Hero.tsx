@@ -95,8 +95,8 @@ export function Hero() {
               {/* Intentionally using native img to preserve full-size render */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/avatar.png"
-                alt="Mohamed Ali Chouikh"
+                src={profile.avatarUrl}
+                alt={profile.name}
                 className="h-full w-full object-contain"
               />
             </div>

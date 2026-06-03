@@ -55,7 +55,7 @@ export async function POST(request: Request) {
       bullets: bullets.length > 0 ? bullets : ["Project details to be added."],
     };
 
-    return Response.json({ success: true, draft });
+    return Response.json({ success: true, draft, readmeContent: readme });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return Response.json(

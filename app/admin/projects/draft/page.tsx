@@ -6,20 +6,27 @@ import { ArrowLeft, Sparkles, Save, Loader2 } from "lucide-react";
 import { GitHub } from "@/components/ui/icons/GitHub";
 import type { DraftProject } from "@/lib/types";
 
+interface DraftState {
+  draft: DraftProject;
+  readmeContent: string;
+}
+
 export default function GitHubDraftPage() {
   const [repoUrl, setRepoUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [draft, setDraft] = useState<DraftProject | null>(null);
+  const [draftState, setDraftState] = useState<DraftState | null>(null);
   const [enhancing, setEnhancing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const draft = draftState?.draft ?? null;
 
   const handleFetch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setDraft(null);
+    setDraftState(null);
     setSaveSuccess(false);
 
     try {
@@ -37,7 +44,10 @@ export default function GitHubDraftPage() {
         return;
       }
 
-      setDraft(data.draft);
+      setDraftState({
+        draft: data.draft,
+        readmeContent: data.readmeContent ?? "",
+      });
     } catch {
       setError("Network error");
     } finally {
@@ -46,7 +56,7 @@ export default function GitHubDraftPage() {
   };
 
   const handleEnhance = async () => {
-    if (!draft) return;
+    if (!draftState) return;
     setEnhancing(true);
     setError("");
 
@@ -55,10 +65,10 @@ export default function GitHubDraftPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          projectName: draft.title,
-          description: draft.tagline,
-          readmeContent: "", // We don't store the full README, but the API can work with what it has
-          techStack: draft.techStack,
+          projectName: draftState.draft.title,
+          description: draftState.draft.tagline,
+          readmeContent: draftState.readmeContent,
+          techStack: draftState.draft.techStack,
         }),
       });
 
@@ -71,10 +81,25 @@ export default function GitHubDraftPage() {
       }
 
       const result = data.result;
-      setDraft({
-        ...draft,
-        tagline: result.tagline ?? draft.tagline,
-        bullets: result.bullets ?? draft.bullets,
+      const newBullets: string[] = [];
+
+      // Use enhancedDescription as first bullet if available
+      if (result.enhancedDescription) {
+        newBullets.push(result.enhancedDescription);
+      }
+
+      // Append AI-generated bullets
+      if (result.bullets && result.bullets.length > 0) {
+        newBullets.push(...result.bullets);
+      }
+
+      setDraftState({
+        ...draftState,
+        draft: {
+          ...draftState.draft,
+          tagline: result.tagline ?? draftState.draft.tagline,
+          bullets: newBullets.length > 0 ? newBullets : draftState.draft.bullets,
+        },
       });
     } catch {
       setError("Network error during AI enhancement");
@@ -90,14 +115,20 @@ export default function GitHubDraftPage() {
     setSaveSuccess(false);
 
     try {
-      // First, fetch current projects
-      const projectsResponse = await fetch("/data/projects.json");
-      const projects = await projectsResponse.json();
+      // Fetch current projects via API (data/ dir is not statically served)
+      const projectsResponse = await fetch("/api/admin/data/projects");
+      const projectsResult = await projectsResponse.json();
 
-      // Add the new draft
+      if (!projectsResponse.ok || !projectsResult.success) {
+        setError(projectsResult.error ?? "Failed to load existing projects");
+        setSaving(false);
+        return;
+      }
+
+      const projects = projectsResult.data as DraftProject[];
       const updated = [...projects, draft];
 
-      // Save
+      // Save updated projects
       const response = await fetch("/api/admin/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -121,8 +152,11 @@ export default function GitHubDraftPage() {
   };
 
   const handleChange = (field: keyof DraftProject, value: string | string[]) => {
-    if (!draft) return;
-    setDraft({ ...draft, [field]: value });
+    if (!draftState) return;
+    setDraftState({
+      ...draftState,
+      draft: { ...draftState.draft, [field]: value },
+    });
   };
 
   return (
