@@ -186,5 +186,23 @@
       "Implemented secure, role-based authentication and KYC onboarding workflows utilizing Supabase JWTs and WebAuthn/Passkeys.",
       "Optimized developer productivity and deployment reliability through containerized orchestration with Docker Compose."
     ]
+  },
+  {
+    "id": "DalyChouikh-qr-code-generator",
+    "title": "qr-code-generator",
+    "tagline": "An interactive, terminal-based QR code generator with support for multi-format output and smart content templates.",
+    "techStack": [
+      "Go"
+    ],
+    "year": "2026",
+    "githubUrl": "https://github.com/DalyChouikh/qr-code-generator",
+    "liveUrl": "",
+    "bullets": [
+      "A high-performance Go-based CLI tool that brings professional QR code generation to the terminal. It combines a seamless interactive user experience with powerful customization options, making it an essential utility for developers and power users.",
+      "Developed a robust TUI wizard using the Bubbletea framework to streamline QR code creation directly from the terminal.",
+      "Integrated dynamic content templates for WiFi credentials, vCards, SMS, and email to simplify complex data encoding.",
+      "Implemented advanced features including real-time terminal QR previews, custom color palettes, and a local generation history database.",
+      "Engineered a cross-platform CLI tool with automated self-updating capabilities and flexible export options for PNG and SVG formats."
+    ]
   }
 ]
