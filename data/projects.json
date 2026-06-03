@@ -160,5 +160,24 @@
       "Implemented secure multi-tenancy with AES-256-GCM encryption to ensure data privacy and user isolation.",
       "Architected a responsive frontend using React 19, Tailwind CSS, and TanStack Query for an optimized user experience."
     ]
+  },
+  {
+    "id": "DalyChouikh-qr-code-generator",
+    "title": "qr-code-generator",
+    "tagline": "An interactive, terminal-based QR code generator with support for multi-format output and smart content templates.",
+    "techStack": [
+      "Go"
+    ],
+    "year": "2026",
+    "githubUrl": "https://github.com/DalyChouikh/qr-code-generator",
+    "liveUrl": "",
+    "bullets": [
+      "A feature-rich terminal application designed to simplify the creation of custom QR codes through an intuitive interactive UI. It combines powerful Go-based generation logic with professional TUI design, making it an essential utility for developers and power users.",
+      "Built a sophisticated CLI tool using the Bubbletea framework to provide a seamless, step-by-step interactive wizard.",
+      "Integrated support for diverse content types including WiFi credentials, vCards, and SMS, streamlining complex data encoding.",
+      "Implemented custom color and dimension controls to allow users to generate highly stylized PNG or SVG QR codes.",
+      "Engineered a persistent generation history and built-in self-updater to enhance long-term developer productivity.",
+      "Optimized cross-platform performance with native Go binaries, enabling rapid deployment across macOS, Linux, and Windows."
+    ]
   }
 ]
