@@ -194,7 +194,10 @@
     "techStack": [
       "Go",
       "TUI",
-      "CLI"
+      "CLI",
+      "Bubble Tea",
+      "Lip Gloss",
+      "go-qrcode"
     ],
     "year": "2026",
     "githubUrl": "https://github.com/DalyChouikh/qr-code-generator",
