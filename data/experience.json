@@ -15,7 +15,7 @@
   {
     "id": "insimplo-intern",
     "company": "Insimplo",
-    "companyUrl": "",
+    "companyUrl": "https://insimplo.de/",
     "title": "Software AI Engineer Intern",
     "location": "Sousse, Tunisia",
     "dateRange": "July 2025 — Aug 2025",
@@ -28,7 +28,7 @@
   {
     "id": "proxym-intern",
     "company": "Proxym-IT",
-    "companyUrl": "",
+    "companyUrl": "https://www.proxym-group.com/",
     "title": "Software Developer Intern",
     "location": "Sousse, Tunisia",
     "dateRange": "Feb 2024 — June 2024",
@@ -36,6 +36,19 @@
       "Built a crowdfunding platform connecting 2 audiences: startups pitching investment opportunities and investors evaluating them.",
       "Implemented web, mobile, and backend features using React, React Native, NestJS, PostgreSQL, Docker, and Azure.",
       "Integrated DialogFlow and Redis to support conversational workflows, caching, and improved platform scalability."
+    ]
+  },
+  {
+    "id": "savagesse-intern",
+    "company": "Savagesse IT",
+    "companyUrl": "https://savagesse.com/",
+    "title": "Software Engineer Intern",
+    "location": "Sousse, Tunisia",
+    "dateRange": "July 2026 — Aug 2026",
+    "bullets": [
+      "Building SavAcademy, a multi-tenant football academy management SaaS with Next.js 16, React 19, and PostgreSQL, covering players, teams, attendance, payments, and competitions.",
+      "Shipped a multi-tenant public front office serving academy websites from 1 Next.js deployment via hostname-based tenant resolution, with bilingual French/Arabic RTL support and end-to-end tests enforcing tenant isolation.",
+      "Worked on SavRentCar, a multi-tenant car-rental marketplace SaaS built with TypeScript, Bun, and PostgreSQL row-level security."
     ]
   }
 ]
