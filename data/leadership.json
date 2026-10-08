@@ -7,8 +7,8 @@
     "location": "Sousse, Tunisia",
     "dateRange": "Nov 2022 — Present",
     "bullets": [
-      "Supported GDG platform and event tooling work for 3+ years, including community software used for campus hackathon registration.",
-      "Held project and training department roles across 2 ISAMM organizations: ENACTUS and Robotics Club (Sept 2021 — June 2022)."
+      "Developed a campus URL management platform using Go and React, featuring Google OAuth authentication, cus-\ntomizable QR codes, and link analytics.",
+      "Collaborated with GDG members on Hackwarts 2.0 and Choufli Hal 2.0 hackathon registration portals, and initiated\nTapNShow to address meeting coordination needs."
     ]
   }
 ]
