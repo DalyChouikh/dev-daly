@@ -209,5 +209,20 @@
       "Implemented advanced features including real-time terminal QR previews, custom color palettes, and a local generation history database.",
       "Engineered a cross-platform CLI tool with automated self-updating capabilities and flexible export options for PNG and SVG formats."
     ]
+  },
+  {
+    "id": "DalyChouikh-TapNShow",
+    "title": "TapNShow",
+    "tagline": "A platform for things to confirm, like meetings, and other stuff",
+    "techStack": [
+      "TypeScript"
+    ],
+    "year": "2026",
+    "githubUrl": "https://github.com/DalyChouikh/TapNShow",
+    "liveUrl": "https://tapnshow.tn",
+    "bullets": [
+      "A platform for things to confirm, like meetings, and other stuff",
+      "**Know who's coming before the meeting starts.** TapNShow sends meeting invites from a group's own"
+    ]
   }
 ]
