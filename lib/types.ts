@@ -2,6 +2,50 @@ import { z } from "zod";
 
 const HttpUrlSchema = z.url({ protocol: /^https?$/ });
 
+function isPublicAssetPath(value: string): boolean {
+  let path = value;
+
+  // Decode repeatedly so encoded separators cannot conceal traversal from publishing validation.
+  while (true) {
+    if (!path.startsWith("/") || path.length < 2 || path.includes("//") || /[\\?#\s]/u.test(path)) return false;
+    if (path.split("/").some((segment) => segment === "." || segment === "..")) return false;
+    if (!path.includes("%")) return true;
+
+    try {
+      const decoded = decodeURIComponent(path);
+      if (decoded === path) return true;
+      path = decoded;
+    } catch {
+      return false;
+    }
+  }
+}
+
+/** A rooted asset served from public/, without URL schemes, traversal, queries, or fragments. */
+export const PublicAssetPathSchema = z.string().refine(isPublicAssetPath, "Must be a rooted public asset path");
+
+const ProjectMediaFields = {
+  src: PublicAssetPathSchema,
+  alt: z.string(),
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+};
+
+/** Image dimensions preserve the layout before deferred media loads. */
+export const ProjectImageSchema = z.object({ type: z.literal("image"), ...ProjectMediaFields });
+export type ProjectImage = z.infer<typeof ProjectImageSchema>;
+
+/** Native video always has a local poster for the initial, paused presentation. */
+export const ProjectVideoSchema = z.object({
+  type: z.literal("video"),
+  ...ProjectMediaFields,
+  poster: PublicAssetPathSchema,
+});
+export type ProjectVideo = z.infer<typeof ProjectVideoSchema>;
+
+export const ProjectMediaSchema = z.discriminatedUnion("type", [ProjectImageSchema, ProjectVideoSchema]);
+export type ProjectMedia = z.infer<typeof ProjectMediaSchema>;
+
 /** Social links configuration */
 export const SocialLinksSchema = z.object({
   linkedin: HttpUrlSchema,
@@ -20,6 +64,9 @@ export type Stat = z.infer<typeof StatSchema>;
 /** Profile data loaded from profile.json */
 export const ProfileSchema = z.object({
   name: z.string(),
+  displayName: z.string().optional(),
+  introduction: z.string().optional(),
+  bio: z.array(z.string()).optional(),
   title: z.string(),
   tagline: z.string(),
   summary: z.string(),
@@ -64,6 +111,12 @@ export type Education = z.infer<typeof EducationSchema>;
 export const ProjectSchema = z.object({
   id: z.string(),
   title: z.string(),
+  displayTitle: z.string().optional(),
+  category: z.string().optional(),
+  engineeringIntro: z.string().optional(),
+  featured: z.boolean().optional(),
+  media: ProjectMediaSchema.optional(),
+  gallery: z.array(ProjectImageSchema).optional(),
   tagline: z.string(),
   techStack: z.array(z.string()),
   year: z.string(),
@@ -117,6 +170,7 @@ export type NavItem = z.infer<typeof NavItemSchema>;
 /** Site configuration */
 export const SiteConfigSchema = z.object({
   sectionOrder: z.array(z.string()),
+  featuredProjectIds: z.array(z.string()).default([]),
   theme: z.string(),
   resumeUrl: z.string().refine((val) => val.startsWith("/") || val.startsWith("http"), {
     message: "Must be a local path (/) or a URL",
@@ -124,19 +178,6 @@ export const SiteConfigSchema = z.object({
   navItems: z.array(NavItemSchema),
 });
 export type SiteConfig = z.infer<typeof SiteConfigSchema>;
-
-/** Section name union type derived from sectionOrder */
-export type SectionName =
-  | "hero"
-  | "about"
-  | "skills"
-  | "experience"
-  | "education"
-  | "projects"
-  | "leadership"
-  | "certifications"
-  | "languages"
-  | "contact";
 
 /** Contact form submission */
 export const ContactFormSchema = z.object({

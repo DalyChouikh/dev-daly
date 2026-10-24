@@ -1,67 +1,32 @@
-import { getEducation } from "@/lib/data";
-import { SectionWrapper } from "@/components/ui/SectionWrapper";
-import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import type { Education } from "@/lib/types";
+import type { Education as EducationEntry } from "@/lib/types";
+import { SectionHeading } from "@/components/ui/PortfolioPrimitives";
 
-export function Education() {
-  const education = getEducation();
-
+/** Degrees and coursework stay complete and readable in the public page. */
+export function Education({ entries }: { entries: readonly EducationEntry[] }) {
   return (
-    <SectionWrapper id="education">
-      <AnimatedSection>
-        <h2 className="font-display text-3xl font-bold text-on-surface md:text-4xl">
-          Education
-        </h2>
-        <p className="mt-3 max-w-2xl text-on-surface-variant">
-          Academic foundation in software engineering and computer science.
-        </p>
-      </AnimatedSection>
-
-      <StaggerContainer
-        className="mt-12 grid gap-6 md:grid-cols-2"
-        staggerDelay={0.15}
-      >
-        {education.map((entry: Education) => (
-          <StaggerItem key={entry.id}>
-            <div className="glass-card glass-card-hover p-6">
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-                <h3 className="font-display text-lg font-bold text-on-surface">
-                  {entry.institution}
-                </h3>
-                <time className="font-mono text-xs text-primary">
-                  {entry.dateRange}
-                </time>
-              </div>
-
-              <p className="mt-1 text-sm text-on-surface-variant">
-                {entry.location}
-              </p>
-
-              <div className="mt-2 font-semibold text-secondary">
-                {entry.degree}
-              </div>
-
-              {entry.coursework.length > 0 && (
-                <div className="mt-4">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                    Coursework
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {entry.coursework.map((course) => (
-                      <span
-                        key={course}
-                        className="rounded-sm bg-secondary/10 px-2 py-0.5 font-mono text-xs text-secondary"
-                      >
-                        {course}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
+    <section className="education section" id="education">
+      <SectionHeading
+        title="Education"
+        description="Software engineering, from foundations to distributed systems."
+      />
+      <div className="education-list">
+        {entries.map((entry) => (
+          <article
+            className="degree"
+            key={entry.id}
+            data-education={entry.id}
+            data-reveal="degree"
+          >
+            <p className="date">{entry.dateRange}</p>
+            <div>
+              <h3>{entry.degree}</h3>
+              <p className="institution">{entry.institution}</p>
+              <p className="location">{entry.location}</p>
+              <p className="coursework">{entry.coursework.join(" · ")}</p>
             </div>
-          </StaggerItem>
+          </article>
         ))}
-      </StaggerContainer>
-    </SectionWrapper>
+      </div>
+    </section>
   );
 }

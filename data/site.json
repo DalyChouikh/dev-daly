@@ -1,22 +1,21 @@
 {
   "sectionOrder": [
     "hero",
-    "skills",
+    "work",
     "experience",
+    "skills",
     "education",
     "projects",
-    "leadership",
-    "certifications",
-    "languages",
+    "about",
     "contact"
   ],
-  "theme": "stardust",
+  "featuredProjectIds": ["DalyChouikh-TapNShow", "DalyChouikh-ai-copilot-tool"],
+  "theme": "olive-editorial",
   "resumeUrl": "/resume.pdf",
   "navItems": [
-    { "id": "hero", "label": "Home" },
-    { "id": "about", "label": "About" },
+    { "id": "work", "label": "Work" },
     { "id": "experience", "label": "Experience" },
-    { "id": "projects", "label": "Projects" },
+    { "id": "about", "label": "About" },
     { "id": "contact", "label": "Contact" }
   ]
 }

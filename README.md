@@ -1,4 +1,6 @@
-# Portfolio Deployment Guide
+# Daly’s portfolio
+
+The public site uses the approved Olive editorial identity, custom `daly.` wordmark, and Hanken Grotesk. The authenticated admin publishes validated JSON through GitHub. See the [architecture and content guide](docs/portfolio-architecture.md) for the public sections, featured projects, media, and motion tooling.
 
 ## Prerequisites
 
@@ -114,6 +116,8 @@ Access `/admin` on your deployed site. Login with the `ADMIN_PASSWORD` you set.
 
 1. **Via Admin Panel**: Go to `/admin`, edit sections, save changes
 2. **Via Git**: Edit JSON files in `data/` folder and push — auto-deploys
+
+Featured work uses the ordered `featuredProjectIds` in `data/site.json`. All remaining projects appear in the expandable archive. Project presentation fields, screenshots, and video paths are documented in the [content guide](docs/portfolio-architecture.md#content-and-media).
 
 ## Troubleshooting
 

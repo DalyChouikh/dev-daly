@@ -15,3 +15,10 @@ AGENTS.md
 DESIGN.md
 .agents/
 .codex/
+.superpowers/
+.taste-skill/
+.worktrees/
+docs/motion/
+test-results/
+playwright-report/
+.env*

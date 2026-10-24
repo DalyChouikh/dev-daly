@@ -1,54 +1,18 @@
-import { getLanguages } from "@/lib/data";
-import { SectionWrapper } from "@/components/ui/SectionWrapper";
-import { CircularRing } from "@/components/ui/CircularRing";
-import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import type { Language } from "@/lib/types";
 
-const proficiencyMap: Record<string, { percentage: number; label: string }> = {
-  Native: { percentage: 100, label: "100%" },
-  "Professional proficiency": { percentage: 75, label: "75%" },
-  "Elementary proficiency": { percentage: 25, label: "25%" },
-};
-
-export function Languages() {
-  const languages = getLanguages();
-
+/** Spoken languages retain the owner's published proficiency descriptions. */
+export function Languages({ entries }: { entries: readonly Language[] }) {
   return (
-    <SectionWrapper id="languages">
-      <AnimatedSection>
-        <h2 className="font-display text-3xl font-bold text-on-surface md:text-4xl">
-          Languages
-        </h2>
-        <p className="mt-3 max-w-2xl text-on-surface-variant">
-          Communication skills across multiple languages.
-        </p>
-      </AnimatedSection>
-
-      <StaggerContainer
-        className="mt-12 grid gap-6 md:grid-cols-3"
-        staggerDelay={0.1}
-      >
-        {languages.map((lang: Language) => {
-          const level = proficiencyMap[lang.proficiency] ?? { percentage: 50, label: "50%" };
-
-          return (
-            <StaggerItem key={lang.name}>
-              <div className="flex items-center gap-5 glass-card glass-card-hover p-5">
-                <CircularRing percentage={level.percentage} label={level.label} />
-
-                <div>
-                  <h3 className="font-display text-lg font-bold text-on-surface">
-                    {lang.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-primary">
-                    {lang.proficiency}
-                  </p>
-                </div>
-              </div>
-            </StaggerItem>
-          );
-        })}
-      </StaggerContainer>
-    </SectionWrapper>
+    <section className="languages" id="languages">
+      <h3>Languages</h3>
+      <dl>
+        {entries.map((entry) => (
+          <div key={entry.name}>
+            <dt>{entry.name}</dt>
+            <dd>{entry.proficiency}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   );
 }

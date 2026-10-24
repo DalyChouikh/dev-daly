@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { getProfile } from "@/lib/data";
 import "./globals.css";
 
 const hankenGrotesk = localFont({
@@ -23,10 +24,18 @@ const jetbrainsMono = localFont({
   display: "swap",
 });
 
+const profile = getProfile();
+const title = `${profile.name} | ${profile.title}`;
+const description = profile.introduction ?? profile.summary;
+
+export const viewport: Viewport = { themeColor: "#ecebe7" };
+
 export const metadata: Metadata = {
-  title: "Mohamed Ali Chouikh | Software & AI Engineer",
-  description:
-    "M.Sc. Software Engineering candidate with 2+ years of experience in AI, full-stack, mobile, and backend systems. Specializing in Go, TypeScript, React, NestJS, and AI model fine-tuning.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL ?? "https://www.dev-daly.tn",
+  ),
+  title,
+  description,
   keywords: [
     "Mohamed Ali Chouikh",
     "Software Engineer",
@@ -44,17 +53,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000",
-    siteName: "Mohamed Ali Chouikh Portfolio",
-    title: "Mohamed Ali Chouikh | Software & AI Engineer",
-    description:
-      "M.Sc. Software Engineering candidate with 2+ years of experience in AI, full-stack, and backend systems.",
+    url: "/",
+    siteName: `${profile.displayName ?? profile.name} — Portfolio`,
+    title,
+    description,
+    images: [
+      {
+        url: "/brand/social-card.png",
+        width: 1200,
+        height: 630,
+        alt: "Daly Chouikh — Software & AI Engineer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mohamed Ali Chouikh | Software & AI Engineer",
-    description:
-      "M.Sc. Software Engineering candidate with 2+ years of experience in AI, full-stack, and backend systems.",
+    title,
+    description,
+    images: ["/brand/social-card.png"],
   },
   robots: {
     index: true,

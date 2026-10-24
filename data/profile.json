@@ -1,8 +1,14 @@
 {
   "name": "Mohamed Ali Chouikh",
+  "displayName": "Daly Chouikh",
+  "introduction": "Software & AI engineer in Tunisia, building community tools, AI copilots, and the systems behind them.",
+  "bio": [
+    "I’m Mohamed Ali Chouikh — Daly for short. A software and AI engineer based in Monastir, Tunisia.",
+    "I build across the stack: interfaces people use, backend systems they rely on, and AI tools that connect the two. Alongside my master’s in software engineering, I’ve delivered freelance projects and worked with engineering teams in Sousse."
+  ],
   "title": "Software & AI Engineer",
   "tagline": "Software Engineer @ISSATSO | Golang | NestJS | AI/ML | DevOps Enthusiast | Open for New Opportunities",
-  "summary": "M.Sc. Software Engineering candidate graduating in 2027 with 2+ years of hands-on experience shipping production AI, full-stack, mobile, and backend systems across 15+ freelance projects and 2 software developer internships. Delivered AI user-story generation workflows, marketplace-style backend services, a startup crowdfunding platform, skilled in JavaScript, TypeScript, Go, Java, Python, React, Next.js, NestJS, Docker, Azure, PostgreSQL, and AI model fine-tuning.",
+  "summary": "M.Sc. Software Engineering candidate graduating in 2027 with 2+ years of hands-on experience shipping production AI, full-stack, mobile, and backend systems across 15+ freelance projects and 3 software developer internships. Delivered AI user-story generation workflows, marketplace-style backend services, a startup crowdfunding platform, skilled in JavaScript, TypeScript, Go, Java, Python, React, Next.js, NestJS, Docker, Azure, PostgreSQL, and AI model fine-tuning.",
   "email": "chouikhdaly215@gmail.com",
   "phone": "+216 92 871 542",
   "location": "Monastir, Tunisia",

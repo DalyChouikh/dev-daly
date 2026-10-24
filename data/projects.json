@@ -62,7 +62,17 @@
   {
     "id": "DalyChouikh-ai-copilot-tool",
     "title": "Ai Copilot Tool",
-    "tagline": "An AI-powered task management board that lets you orchestrate workflows using natural language.",
+    "displayTitle": "Within",
+    "category": "AI & productivity",
+    "featured": true,
+    "media": {
+      "type": "image",
+      "src": "/images/projects/within-board.png",
+      "alt": "Within task board with its AI copilot panel open",
+      "width": 1440,
+      "height": 560
+    },
+    "tagline": "A task board with an AI copilot that turns natural language into actions.",
     "techStack": [
       "TypeScript",
       "Next.js"
@@ -77,7 +87,8 @@
       "Implemented automated bulk actions, including multi-card labeling and board summary generation, to streamline productivity.",
       "Built a modular architecture with TypeScript to support extensible AI tool definitions and state management.",
       "Styled a modern, accessible interface leveraging Tailwind CSS and shadcn/ui components for consistent design."
-    ]
+    ],
+    "engineeringIntro": "Built Claude tool calling into a Kanban board for card operations, bulk labeling, and board summaries. React, Zustand, and dnd-kit keep the board interactive."
   },
   {
     "id": "DalyChouikh-delify",
@@ -213,6 +224,32 @@
   {
     "id": "DalyChouikh-TapNShow",
     "title": "TapNShow",
+    "category": "Community tools",
+    "featured": true,
+    "media": {
+      "type": "video",
+      "src": "/media/projects/tapnshow-launch.mp4",
+      "poster": "/images/projects/tapnshow-poster.jpg",
+      "alt": "TapNShow meeting invitation and attendance walkthrough",
+      "width": 1920,
+      "height": 1080
+    },
+    "gallery": [
+      {
+        "type": "image",
+        "src": "/images/projects/tapnshow-invite.png",
+        "alt": "TapNShow meeting invitation with one-tap RSVP options",
+        "width": 486,
+        "height": 298
+      },
+      {
+        "type": "image",
+        "src": "/images/projects/tapnshow-detail.png",
+        "alt": "TapNShow meeting details and attendance management",
+        "width": 1440,
+        "height": 1040
+      }
+    ],
     "tagline": "Meeting invitations, one-tap RSVPs, and live attendance for clubs and communities.",
     "techStack": [
       "TypeScript",
@@ -234,6 +271,7 @@
       "Enforced workspace roles and tenant isolation with Supabase Auth and row-level security on every database table.",
       "Added spreadsheet and CSV member imports, live Google Sheets synchronization, and Excel exports for committee reporting.",
       "Delivered an installable PWA with optional member accounts and Web Push reminders for upcoming meetings."
-    ]
+    ],
+    "engineeringIntro": "From a Gmail invitation to a live attendance sheet."
   }
 ]

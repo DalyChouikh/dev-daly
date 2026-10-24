@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone video studies have their own dependencies and checks.
+    "docs/motion/**",
   ]),
 ]);
 

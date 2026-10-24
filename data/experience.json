@@ -46,7 +46,7 @@
     "location": "Sousse, Tunisia",
     "dateRange": "July 2026 — Aug 2026",
     "bullets": [
-      "Building SavAcademy, a multi-tenant football academy management SaaS with Next.js 16, React 19, and PostgreSQL, covering players, teams, attendance, payments, and competitions.",
+      "Developed SavAcademy, a multi-tenant football academy management SaaS with Next.js 16, React 19, and PostgreSQL, covering players, teams, attendance, payments, and competitions.",
       "Shipped a multi-tenant public front office serving academy websites from 1 Next.js deployment via hostname-based tenant resolution, with bilingual French/Arabic RTL support and end-to-end tests enforcing tenant isolation.",
       "Worked on SavRentCar, a multi-tenant car-rental marketplace SaaS built with TypeScript, Bun, and PostgreSQL row-level security."
     ]
