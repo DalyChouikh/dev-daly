@@ -14,6 +14,9 @@
 /coverage
 /test-results/
 /playwright-report/
+/.superpowers/
+/.taste-skill/
+/.worktrees/
 
 # next.js
 /.next/

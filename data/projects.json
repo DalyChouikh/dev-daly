@@ -213,16 +213,27 @@
   {
     "id": "DalyChouikh-TapNShow",
     "title": "TapNShow",
-    "tagline": "A platform for things to confirm, like meetings, and other stuff",
+    "tagline": "Meeting invitations, one-tap RSVPs, and live attendance for clubs and communities.",
     "techStack": [
-      "TypeScript"
+      "TypeScript",
+      "Next.js",
+      "React",
+      "Supabase",
+      "PostgreSQL",
+      "TanStack Query",
+      "Tailwind CSS",
+      "Gmail API"
     ],
     "year": "2026",
     "githubUrl": "https://github.com/DalyChouikh/TapNShow",
     "liveUrl": "https://tapnshow.tn",
     "bullets": [
-      "A platform for things to confirm, like meetings, and other stuff",
-      "**Know who's coming before the meeting starts.** TapNShow sends meeting invites from a group's own"
+      "Built a meeting coordination platform for student clubs, associations, and volunteer teams, combining email invitations, one-tap RSVPs, and live attendance tracking.",
+      "Integrated Gmail OAuth so each workspace sends invitations and reminders from its own address, with no account required for members to respond.",
+      "Engineered a PostgreSQL-backed email outbox with batched dispatch, retries, per-Gmail quotas, and a scheduled recovery worker.",
+      "Enforced workspace roles and tenant isolation with Supabase Auth and row-level security on every database table.",
+      "Added spreadsheet and CSV member imports, live Google Sheets synchronization, and Excel exports for committee reporting.",
+      "Delivered an installable PWA with optional member accounts and Web Push reminders for upcoming meetings."
     ]
   }
 ]
