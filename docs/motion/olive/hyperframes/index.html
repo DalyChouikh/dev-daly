@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"reducedMotion","type":"boolean","label":"Reduced motion — static chapter cuts","default":false}]'>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, height=1080" />
+  <title>Olive — Daly identity to product</title>
+  <script src="node_modules/gsap/dist/gsap.min.js"></script>
+  <style>
+    @font-face { font-family: Hanken; src: url(assets/hanken.woff2) format('woff2'); font-weight: 100 900; font-display: block; }
+    * { box-sizing: border-box; margin: 0; }
+    html, body { width: 1920px; height: 1080px; overflow: hidden; background: #ecebe7; }
+    body { font-family: Hanken, sans-serif; color: #38450f; }
+    #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+    .clip { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .frame { height: 100%; padding: 92px 110px; display: flex; flex-direction: column; }
+    .chrome { display: flex; align-items: center; justify-content: space-between; font-size: 24px; font-weight: 550; letter-spacing: .03em; }
+    .chrome img { width: 74px; height: 74px; object-fit: contain; }
+    .name { display: flex; flex: 1; flex-direction: column; justify-content: center; padding-bottom: 36px; }
+    .name-line { overflow: hidden; }
+    .name-line span { display: block; font-size: 270px; font-weight: 750; line-height: .98; letter-spacing: -.065em; }
+    .footer { display: flex; justify-content: space-between; font-size: 30px; line-height: 1.3; }
+    .footer p { max-width: 650px; }
+    #logo-frame { align-items: center; justify-content: center; gap: 54px; }
+    #wordmark { width: 850px; height: 360px; fill: #38450f; }
+    #logo-caption { font-size: 32px; letter-spacing: .02em; }
+    #product-frame { color: #ecebe7; background: #38450f; }
+    .product-content { display: grid; grid-template-columns: 650px 1fr; align-items: center; gap: 64px; flex: 1; }
+    .product-copy { display: flex; flex-direction: column; gap: 32px; }
+    .eyebrow { font-size: 24px; letter-spacing: .06em; }
+    #product-title { font-size: 128px; line-height: 1; font-weight: 650; letter-spacing: -.06em; }
+    .product-copy p { max-width: 570px; font-size: 38px; line-height: 1.3; }
+    #invite { width: 986px; height: 605px; object-fit: contain; }
+    .product-footer { border-top: 1px solid #7b844e; padding-top: 30px; font-size: 26px; display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+  <div data-hf-id="hf-fsq6" id="root" data-composition-id="olive-study" data-start="0" data-width="1920" data-height="1080" data-duration="8">
+    <section data-hf-id="hf-3jmk" id="name-scene" class="clip" data-start="0" data-duration="2" data-track-index="0">
+      <div data-hf-id="hf-32ho" class="frame" id="name-frame">
+        <div data-hf-id="hf-6ex2" class="chrome"><img data-hf-id="hf-3jm8" src="assets/a-symbol.svg" alt="Daly symbol" /><p data-hf-id="hf-g93j">SOFTWARE &amp; AI ENGINEER · TUNISIA</p></div>
+        <h1 data-hf-id="hf-fu61" class="name" aria-label="Daly Chouikh"><span data-hf-id="hf-047f" class="name-line"><span data-hf-id="hf-76fq" id="name-first">Daly</span></span><span data-hf-id="hf-et2j" class="name-line"><span data-hf-id="hf-3f5d" id="name-last">Chouikh</span></span></h1>
+        <div data-hf-id="hf-yh7l" class="footer"><p data-hf-id="hf-vk6t">Thoughtful interfaces.<br data-hf-id="hf-x5px" />Useful systems.</p><p data-hf-id="hf-xh4e">Selected work ↗</p></div>
+      </div>
+    </section>
+    <section data-hf-id="hf-tpja" id="logo-scene" class="clip" data-start="2" data-duration="2" data-track-index="0">
+      <div data-hf-id="hf-xnuo" class="frame" id="logo-frame">
+        <svg data-hf-id="hf-f96i" id="wordmark" viewBox="0 0 680 288" role="img" aria-label="Daly selected A wordmark">
+          <path data-hf-id="hf-tez4" class="logo-piece" fill-rule="evenodd" d="M144 24H184V212H144V196C132 209 113 216 93 216C51 216 24 187 24 148C24 109 52 79 94 79C115 79 132 87 144 100ZM104 116C80 116 64 129 64 148C64 167 80 180 104 180C128 180 144 167 144 148C144 129 128 116 104 116Z"/>
+          <path data-hf-id="hf-j4au" class="logo-piece" fill-rule="evenodd" d="M332 84H372V212H332V196C320 209 301 216 281 216C239 216 212 187 212 148C212 109 240 79 282 79C303 79 320 87 332 100ZM292 116C268 116 252 129 252 148C252 167 268 180 292 180C316 180 332 167 332 148C332 129 316 116 292 116Z"/>
+          <path data-hf-id="hf-tvmo" class="logo-piece" d="M410 24H450V212H410Z"/>
+          <path data-hf-id="hf-8wrx" class="logo-piece" d="M478 84H524L565 155.01L606 84H652L548.08 264H502.08L542 194.85Z"/>
+          <circle data-hf-id="hf-v97o" class="logo-piece" cx="640" cy="196" r="16"/>
+        </svg>
+        <p data-hf-id="hf-ibcb" id="logo-caption">Mohamed Ali Chouikh — Daly, for short.</p>
+      </div>
+    </section>
+    <section data-hf-id="hf-aq6e" id="product-scene" class="clip" data-start="4" data-duration="4" data-track-index="0">
+      <div data-hf-id="hf-j86a" class="frame" id="product-frame">
+        <div data-hf-id="hf-ujgq" class="chrome"><p data-hf-id="hf-hk6t">SELECTED WORK / 01</p><p data-hf-id="hf-uevg">FROM IDENTITY TO WORKING PRODUCT</p></div>
+        <div data-hf-id="hf-4hgt" class="product-content">
+          <div data-hf-id="hf-zenl" class="product-copy"><span data-hf-id="hf-wxt4" class="eyebrow">COMMUNITY TOOLS</span><h2 data-hf-id="hf-jvow" id="product-title">TapNShow</h2><p data-hf-id="hf-on2p">Meeting coordination,<br data-hf-id="hf-rsrt" />without the back-and-forth.</p></div>
+          <img data-hf-id="hf-x41f" id="invite" src="assets/tapnshow-invite.png" alt="Real TapNShow meetup invitation with going, late and cannot come responses" />
+        </div>
+        <div data-hf-id="hf-4kj7" class="product-footer"><p data-hf-id="hf-j2q9">Built for communities. Designed to be used.</p><p data-hf-id="hf-cqqq">daly. / Software &amp; AI Engineer</p></div>
+      </div>
+    </section>
+  </div>
+  <script>
+    // Adapted from the catalog's per-word-rise: two masked lines, fixed cues,
+    // explicit fromTo states, staggered arrivals, motionless reading holds.
+    const reducedMotion = window.__hyperframes?.getVariables?.().reducedMotion === true;
+    const tl = gsap.timeline({ paused: true });
+    if (reducedMotion) {
+      tl.set('#name-first, #name-last', { y: 0 }, 0);
+      tl.set('.logo-piece, #logo-caption', { y: 0, opacity: 1 }, 2);
+      tl.set('#product-frame', { y: 0 }, 4);
+      tl.set('#invite', { y: 0, scale: 1, opacity: 1 }, 4);
+    } else {
+    tl.fromTo('#name-first', { y: 290 }, { y: 0, duration: .72, ease: 'power3.out' }, .12);
+    tl.fromTo('#name-last', { y: 290 }, { y: 0, duration: .8, ease: 'power3.out' }, .25);
+    tl.to('#name-frame', { y: -70, opacity: 0, duration: .28, ease: 'power2.in' }, 1.72);
+    tl.fromTo('.logo-piece', { y: 45, opacity: 0 }, { y: 0, opacity: 1, stagger: .075, duration: .45, ease: 'power3.out' }, 2.08);
+    tl.fromTo('#logo-caption', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: .35, ease: 'power2.out' }, 2.65);
+    tl.to('#logo-frame', { y: -60, opacity: 0, duration: .3, ease: 'power2.in' }, 3.7);
+    tl.fromTo('#product-frame', { y: 1080 }, { y: 0, duration: .85, ease: 'power3.out' }, 4);
+    tl.fromTo('#invite', { y: 90, scale: .94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: .65, ease: 'power3.out' }, 4.5);
+    }
+    window.__timelines = window.__timelines || {};
+    window.__timelines['olive-study'] = tl;
+    tl.seek(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "duration": 8,
+  "assertions": [
+    { "kind": "appearsBy", "selector": "#name-last", "bySec": 1.4 },
+    { "kind": "appearsBy", "selector": "#wordmark", "bySec": 3 },
+    { "kind": "appearsBy", "selector": "#invite", "bySec": 5.4 }
+  ]
+}

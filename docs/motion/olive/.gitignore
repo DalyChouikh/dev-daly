@@ -1,0 +1,11 @@
+**/node_modules/
+**/dist/
+**/out/
+**/build/
+**/renders/
+**/.hyperframes/
+**/.cache/
+**/.thumbnails/
+**/.npm-cache/
+**/*.tsbuildinfo
+**/check-result.json

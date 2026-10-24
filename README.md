@@ -36,7 +36,7 @@ For production, add these to your Vercel dashboard under **Project Settings → 
 
 ## Environment Variables
 
-Copy `.env.local.example` to `.env.local` and fill in:
+Create `.env.local` using the variables below. Keep its credentials out of Git.
 
 | Variable | Required | Description |
 |----------|----------|-------------|

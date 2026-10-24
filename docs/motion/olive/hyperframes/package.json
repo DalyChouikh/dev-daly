@@ -1,0 +1,18 @@
+{
+  "name": "olive-hyperframes-study",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "hyperframes preview",
+    "check": "hyperframes check",
+    "snapshot": "hyperframes snapshot --at 0.6,2.7,5.7,7.8",
+    "preview:background": "hyperframes preview --background",
+    "preview:stop": "hyperframes preview --stop",
+    "audit": "bun audit"
+  },
+  "dependencies": {
+    "gsap": "3.14.2",
+    "hyperframes": "0.8.193"
+  },
+  "packageManager": "bun@1.4.4"
+}

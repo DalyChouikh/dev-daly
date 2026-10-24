@@ -1,0 +1,12 @@
+.olive-motion,
+.olive-motion * {
+  box-sizing: border-box;
+}
+
+.olive-motion p {
+  margin: 0;
+}
+
+.olive-motion {
+  width: 100%;
+}

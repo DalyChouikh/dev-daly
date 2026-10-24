@@ -38,11 +38,11 @@
 
 - [x] Extract `ContactForm.tsx`: browser-native constraints, typed API result validation, prevent duplicate submits, report success/errors accessibly, preserve failed inputs, use the existing `/api/contact` service.
 - [x] Add `PortfolioMotion.tsx` with a once-only observer and bounded native animations; default content remains visible, reduced motion cancels/skips travel, cleanup disconnects observers/cancels animations.
-- [ ] Build isolated, seekable Hyperframes and Remotion studies using logo A, the approved hero, and actual project media. Keep tooling/dependencies outside the main application bundle and report actual CLI validation outcomes.
+- [x] Build isolated, seekable Hyperframes and Remotion studies using logo A, the approved hero, and actual project media. Keep tooling/dependencies outside the main application bundle and report actual CLI validation outcomes.
 
 ## Task 6 — Verification and preview
 
 - [x] Add public Playwright coverage for required sections, all content counts, responsive menu, disclosure interactions, contact pending/success/failure via intercepted API responses, video no-autoplay/play/seek, and reduced-motion/no-JS readability. Keep existing admin tests.
 - [x] Run `bun run typecheck`, `bun run lint`, `bun test tests`, `bun run build`, and `bun run test:e2e` with the installed Chromium.
 - [x] Inspect desktop/tablet/phone screenshots and fix actual visual/accessibility defects. Review security boundaries and the final diff independently.
-- [ ] Commit the reviewed implementation and publish an application preview. Report the working URL, logo kit, verification results, and any actual limitations. Preserve production until the next integration step.
+- [x] Commit the reviewed implementation and publish an application preview. Report the working URL, logo kit, verification results, and any actual limitations. Preserve production until the next integration step.

@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-24",
+  "scope": "8s silent source studies and proof stills; no MP4 export",
+  "hyperframes": {
+    "version": "0.8.193",
+    "fullCheckPassed": true,
+    "browserRan": true,
+    "lintErrors": 0,
+    "lintWarnings": [
+      "nested_structure_needs_subcomposition",
+      "nested_structure_needs_subcomposition",
+      "nested_structure_needs_subcomposition"
+    ],
+    "runtimeErrors": 0,
+    "layoutErrors": 0,
+    "motionErrors": 0,
+    "motionSamples": 161,
+    "contrastPassed": 19,
+    "contrastChecked": 19,
+    "browserGpuMode": "software",
+    "seekCheck": {
+      "timesSeconds": [
+        5.8,
+        1.333,
+        5.8
+      ],
+      "repeatedInviteOpacity": "1",
+      "repeatedInviteTransform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    "usage": "CLI usage service returned usage_request_failed on a later check; no allowance inferred.",
+    "audit": {
+      "vulnerabilities": 0,
+      "tool": "npm (historical, before Bun migration)"
+    },
+    "bunAudit": {
+      "command": "bun audit --json",
+      "exitCode": 0,
+      "advisories": 0,
+      "rawReport": "evidence/hyperframes-bun-audit.json"
+    },
+    "bunValidation": {
+      "command": "bun run check --json",
+      "exitCode": 0,
+      "fullCheckPassed": true,
+      "browserRan": true,
+      "runtimeErrors": 0,
+      "layoutErrors": 0,
+      "motionErrors": 0,
+      "contrastErrors": 0,
+      "craftWarnings": [
+        "text_below_floor",
+        "line_unread"
+      ]
+    }
+  },
+  "remotion": {
+    "version": "4.0.538",
+    "eslint": "passed",
+    "typescript": "passed",
+    "durationInFrames": 240,
+    "fps": 30,
+    "stillFrames": [
+      40,
+      90,
+      174
+    ],
+    "reducedMotionStillFrame": 0,
+    "seekCheck": {
+      "frames": [
+        174,
+        40,
+        174
+      ],
+      "repeatedProductFrame": {
+        "width": 1920,
+        "height": 1080,
+        "opacity": "1",
+        "translate": "0px"
+      }
+    },
+    "audit": {
+      "vulnerabilities": 0,
+      "patched": "zod 4.5.4 \u2192 4.6.7",
+      "override": "zod@>=4.0.0 <4.6.6",
+      "scope": "Only Zod 4 affected; Remotion remains 4.0.538",
+      "validationAfterPatch": [
+        "ESLint passed",
+        "TypeScript passed",
+        "CLI name and logo stills rendered"
+      ],
+      "tool": "npm (historical, before Bun migration)"
+    },
+    "bunAudit": {
+      "command": "bun audit --json",
+      "exitCode": 0,
+      "advisories": 0,
+      "rawReport": "evidence/remotion-bun-audit.json"
+    },
+    "bunValidation": {
+      "eslint": "passed",
+      "typescript": "passed",
+      "stillFrame": 90,
+      "stillRender": "passed",
+      "zodInstalled": "4.6.7",
+      "overrideHonored": true,
+      "overrideScopeUnchanged": true,
+      "zod3Installed": false,
+      "frameworkVersionChanged": false
+    }
+  },
+  "limitations": [
+    "Hyperframes retains 3 advisory scene-group extraction warnings.",
+    "TapNShow supplied raster source is 486x298 and softens at 1920x1080.",
+    "The previews are local authoring servers, not hosted public URLs.",
+    "Installed skill files were read without updating the global skill installation; task scope permits changes only in this package.",
+    "Remotion emits its strict Zod version warning (expected 4.5.4, patched 4.6.7); lint/types and actual still rendering pass."
+  ],
+  "packageManager": {
+    "name": "bun",
+    "version": "1.4.4",
+    "lockfiles": [
+      "hyperframes/bun.lock",
+      "remotion/bun.lock"
+    ],
+    "frozenInstall": "passed in both packages; no changes",
+    "npmLockfiles": "removed after migration"
+  }
+}
