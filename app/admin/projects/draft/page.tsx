@@ -131,7 +131,7 @@ export default function GitHubDraftPage() {
       const response = await fetch("/api/admin/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ section: "projects", data: updated }),
+        body: JSON.stringify({ section: "projects", data: updated, sha: projectsResult.sha }),
       });
 
       const data = await response.json();

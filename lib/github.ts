@@ -18,9 +18,29 @@ interface GitHubContentResponse {
 
 interface GitHubCommitResponse {
   commit?: { sha?: string };
+  content?: { sha?: string };
 }
 
+/** A stale editor must reload instead of overwriting a newer commit. */
+export class GitHubConflictError extends Error {}
+
 const GITHUB_API_BASE = "https://api.github.com";
+
+/** Reads main directly so failed or pending deployments cannot leave the editor stale. */
+export async function fetchGitHubFile(path: string): Promise<{ content: string; sha: string }> {
+  const token = process.env.GITHUB_TOKEN;
+  const owner = process.env.GITHUB_REPO_OWNER;
+  const repo = process.env.GITHUB_REPO_NAME;
+  if (!token || !owner || !repo) throw new Error("GitHub publishing is not configured");
+  const response = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=main`, {
+    headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github.v3+json" },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`GitHub file read failed: ${response.status}`);
+  const data = await response.json() as GitHubContentResponse & { sha: string };
+  if (data.encoding !== "base64" || !data.content || !data.sha) throw new Error("Invalid GitHub file response");
+  return { content: Buffer.from(data.content, "base64").toString("utf-8"), sha: data.sha };
+}
 
 /**
  * Fetches repository metadata from the GitHub REST API.
@@ -148,7 +168,7 @@ export async function commitFile(
   content: string,
   message: string,
   sha?: string,
-): Promise<string> {
+): Promise<{ commitSha: string; fileSha: string }> {
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
     throw new Error("GITHUB_TOKEN environment variable is not set");
@@ -189,6 +209,9 @@ export async function commitFile(
   );
 
   if (!response.ok) {
+    if (response.status === 409) {
+      throw new GitHubConflictError("This section changed since you opened it. Reload the editor before saving again.");
+    }
     const errorBody = await response.text();
     throw new Error(
       `GitHub Contents API error: ${response.status} ${errorBody}`,
@@ -196,7 +219,8 @@ export async function commitFile(
   }
 
   const data: GitHubCommitResponse = await response.json();
-  return data.commit?.sha ?? `commit-${Date.now()}`;
+  if (!data.commit?.sha || !data.content?.sha) throw new Error("GitHub did not return the saved file revision");
+  return { commitSha: data.commit.sha, fileSha: data.content.sha };
 }
 
 /**

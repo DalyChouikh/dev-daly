@@ -1,4 +1,7 @@
 import { readFile } from "fs/promises";
+import { requireAdmin } from "@/lib/auth";
+import { fetchGitHubFile } from "@/lib/github";
+import { AdminSectionSchema } from "@/lib/types";
 
 /**
  * Serves JSON data files for the admin editor.
@@ -9,21 +12,10 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ section: string }> },
 ) {
+  const unauthorized = requireAdmin(request);
+  if (unauthorized) return unauthorized;
   const { section } = await params;
-
-  const allowedSections = [
-    "profile",
-    "experience",
-    "education",
-    "projects",
-    "skills",
-    "leadership",
-    "certifications",
-    "languages",
-    "site",
-  ];
-
-  if (!allowedSections.includes(section)) {
+  if (!AdminSectionSchema.safeParse(section).success) {
     return Response.json(
       { success: false, error: "Invalid section" },
       { status: 400 },
@@ -32,6 +24,12 @@ export async function GET(
 
   try {
     const filePath = `data/${section}.json`;
+    if (process.env.NODE_ENV === "production") {
+      const { content, sha } = await fetchGitHubFile(filePath);
+      return Response.json({ success: true, data: JSON.parse(content), sha }, {
+        headers: { "Cache-Control": "private, no-store" },
+      });
+    }
     const content = await readFile(filePath, "utf-8");
     const data = JSON.parse(content);
 

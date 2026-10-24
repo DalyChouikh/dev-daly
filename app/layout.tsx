@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const hankenGrotesk = Hanken_Grotesk({
-  subsets: ["latin"],
+const hankenGrotesk = localFont({
+  src: "./fonts/hanken-grotesk-latin.woff2",
   variable: "--font-hanken-grotesk",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: "400 800",
   display: "swap",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: "./fonts/inter-latin.woff2",
   variable: "--font-inter",
-  weight: ["400", "500", "600"],
+  weight: "400 600",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
+const jetbrainsMono = localFont({
+  src: "./fonts/jetbrains-mono-latin.woff2",
   variable: "--font-jetbrains-mono",
-  weight: ["400", "500"],
+  weight: "400 500",
   display: "swap",
 });
 

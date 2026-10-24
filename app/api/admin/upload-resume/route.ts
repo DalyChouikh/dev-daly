@@ -1,10 +1,16 @@
 import { writeFile } from "fs/promises";
+import { z, ZodError } from "zod";
 import { commitBinaryFile } from "@/lib/github";
+import { requireAdmin } from "@/lib/auth";
 
 /**
  * Maximum file size in bytes (10 MB).
  */
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const UploadSchema = z.object({
+  fileBase64: z.string().min(1).regex(/^[A-Za-z0-9+/]+={0,2}$/),
+  fileName: z.string().min(1),
+});
 
 /**
  * Accepts a base64-encoded PDF and saves it as public/resume.pdf.
@@ -12,19 +18,10 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
  * In production: commits to GitHub to trigger a rebuild.
  */
 export async function POST(request: Request) {
+  const unauthorized = requireAdmin(request);
+  if (unauthorized) return unauthorized;
   try {
-    const body = await request.json();
-    const { fileBase64, fileName } = body as {
-      fileBase64: string;
-      fileName: string;
-    };
-
-    if (!fileBase64 || !fileName) {
-      return Response.json(
-        { success: false, error: "Missing file data or file name" },
-        { status: 400 },
-      );
-    }
+    const { fileBase64, fileName } = UploadSchema.parse(await request.json());
 
     const fileSize = Buffer.byteLength(fileBase64, "base64");
     if (fileSize > MAX_FILE_SIZE) {
@@ -41,11 +38,15 @@ export async function POST(request: Request) {
       );
     }
 
+    const buffer = Buffer.from(fileBase64, "base64");
+    if (buffer.subarray(0, 5).toString("ascii") !== "%PDF-") {
+      return Response.json({ success: false, error: "File must contain a PDF document" }, { status: 400 });
+    }
+
     const filePath = "public/resume.pdf";
     const message = `Update resume via admin panel (${new Date().toISOString()})`;
 
     if (process.env.NODE_ENV === "development") {
-      const buffer = Buffer.from(fileBase64, "base64");
       await writeFile(filePath, buffer);
     } else {
       await commitBinaryFile(filePath, fileBase64, message);
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return Response.json(
       { success: false, error: message },
-      { status: 500 },
+      { status: error instanceof ZodError || error instanceof SyntaxError ? 400 : 500 },
     );
   }
 }

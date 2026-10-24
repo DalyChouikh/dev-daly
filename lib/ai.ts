@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { AIEnhanceResponseSchema } from "./types";
 import type { AIEnhanceRequest, AIEnhanceResponse } from "./types";
 
 /**
@@ -94,6 +95,5 @@ Generate a humanized title (if needed), a tagline, a merged and cleaned tech sta
     throw new Error("AI model returned empty response");
   }
 
-  const parsed: AIEnhanceResponse = JSON.parse(content);
-  return parsed;
+  return AIEnhanceResponseSchema.parse(JSON.parse(content));
 }

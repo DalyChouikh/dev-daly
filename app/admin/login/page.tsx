@@ -10,7 +10,8 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
-  const from = searchParams.get("from") ?? "/admin";
+  const requestedFrom = searchParams.get("from") ?? "/admin";
+  const from = /^\/admin(?:\/[A-Za-z0-9_-]+)*\/?$/.test(requestedFrom) ? requestedFrom : "/admin";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,8 +33,8 @@ function LoginForm() {
         return;
       }
 
-      // Redirect to the admin page they were trying to access
-      window.location.href = from;
+      // A full navigation discards redirects prefetched before the session cookie was set.
+      window.location.assign(new URL(from, window.location.origin).href);
     } catch {
       setError("Network error");
       setLoading(false);

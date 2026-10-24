@@ -1,5 +1,8 @@
 import { getYear } from "date-fns";
+import { ZodError } from "zod";
+import { requireAdmin } from "@/lib/auth";
 import { parseGitHubUrl, fetchRepoMetadata, fetchRepoReadme } from "@/lib/github";
+import { GitHubDraftRequestSchema } from "@/lib/types";
 import type { DraftProject } from "@/lib/types";
 
 /**
@@ -7,9 +10,10 @@ import type { DraftProject } from "@/lib/types";
  * Fetches repo metadata and README to populate the draft.
  */
 export async function POST(request: Request) {
+  const unauthorized = requireAdmin(request);
+  if (unauthorized) return unauthorized;
   try {
-    const body = await request.json();
-    const { repoUrl } = body as { repoUrl: string };
+    const { repoUrl } = GitHubDraftRequestSchema.parse(await request.json());
 
     const { owner, repo } = parseGitHubUrl(repoUrl);
 
@@ -60,7 +64,7 @@ export async function POST(request: Request) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return Response.json(
       { success: false, error: message },
-      { status: 500 },
+      { status: error instanceof ZodError || error instanceof SyntaxError ? 400 : 500 },
     );
   }
 }

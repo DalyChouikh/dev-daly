@@ -1,14 +1,17 @@
+import { ZodError } from "zod";
 import { enhanceProjectDraft } from "@/lib/ai";
-import type { AIEnhanceRequest } from "@/lib/types";
+import { requireAdmin } from "@/lib/auth";
+import { AIEnhanceRequestSchema } from "@/lib/types";
 
 /**
  * Enhances a project draft using AI via OpenRouter.
  * Takes draft data + README content and returns polished descriptions.
  */
 export async function POST(request: Request) {
+  const unauthorized = requireAdmin(request);
+  if (unauthorized) return unauthorized;
   try {
-    const body = await request.json();
-    const { originalTitle, projectName, description, readmeContent, techStack } = body as AIEnhanceRequest;
+    const { originalTitle, projectName, description, readmeContent, techStack } = AIEnhanceRequestSchema.parse(await request.json());
 
     const result = await enhanceProjectDraft({
       originalTitle,
@@ -23,7 +26,7 @@ export async function POST(request: Request) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return Response.json(
       { success: false, error: message },
-      { status: 500 },
+      { status: error instanceof ZodError || error instanceof SyntaxError ? 400 : 500 },
     );
   }
 }

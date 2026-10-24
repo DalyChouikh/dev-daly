@@ -1,10 +1,12 @@
 import { z } from "zod";
 
+const HttpUrlSchema = z.url({ protocol: /^https?$/ });
+
 /** Social links configuration */
 export const SocialLinksSchema = z.object({
-  linkedin: z.url(),
-  github: z.url(),
-  portfolio: z.url().or(z.literal("")),
+  linkedin: HttpUrlSchema,
+  github: HttpUrlSchema,
+  portfolio: HttpUrlSchema.or(z.literal("")),
 });
 export type SocialLinks = z.infer<typeof SocialLinksSchema>;
 
@@ -39,9 +41,7 @@ export type Profile = z.infer<typeof ProfileSchema>;
 export const ExperienceSchema = z.object({
   id: z.string(),
   company: z.string(),
-  companyUrl: z.string().refine((val) => val === "" || val.startsWith("http"), {
-    message: "Must be empty or a valid URL",
-  }),
+  companyUrl: HttpUrlSchema.or(z.literal("")),
   title: z.string(),
   location: z.string(),
   dateRange: z.string(),
@@ -67,8 +67,8 @@ export const ProjectSchema = z.object({
   tagline: z.string(),
   techStack: z.array(z.string()),
   year: z.string(),
-  githubUrl: z.url(),
-  liveUrl: z.url().or(z.literal("")),
+  githubUrl: HttpUrlSchema,
+  liveUrl: HttpUrlSchema.or(z.literal("")),
   bullets: z.array(z.string()),
 });
 export type Project = z.infer<typeof ProjectSchema>;
@@ -84,7 +84,7 @@ export type SkillCategory = z.infer<typeof SkillCategorySchema>;
 /** Certification with link */
 export const CertificationSchema = z.object({
   name: z.string(),
-  url: z.url(),
+  url: HttpUrlSchema,
 });
 export type Certification = z.infer<typeof CertificationSchema>;
 
@@ -99,7 +99,7 @@ export type Language = z.infer<typeof LanguageSchema>;
 export const LeadershipSchema = z.object({
   id: z.string(),
   organization: z.string(),
-  organizationUrl: z.url(),
+  organizationUrl: HttpUrlSchema,
   role: z.string(),
   location: z.string(),
   dateRange: z.string(),
@@ -148,7 +148,7 @@ export type ContactForm = z.infer<typeof ContactFormSchema>;
 
 /** GitHub draft request */
 export const GitHubDraftRequestSchema = z.object({
-  repoUrl: z.url("Invalid GitHub URL"),
+  repoUrl: HttpUrlSchema.refine((value) => new URL(value).hostname === "github.com", "Must be a github.com repository URL"),
 });
 export type GitHubDraftRequest = z.infer<typeof GitHubDraftRequestSchema>;
 
@@ -192,8 +192,8 @@ export const DraftProjectSchema = z.object({
   tagline: z.string(),
   techStack: z.array(z.string()),
   year: z.string(),
-  githubUrl: z.url(),
-  liveUrl: z.url().or(z.literal("")),
+  githubUrl: HttpUrlSchema,
+  liveUrl: HttpUrlSchema.or(z.literal("")),
   bullets: z.array(z.string()),
 });
 export type DraftProject = z.infer<typeof DraftProjectSchema>;
@@ -205,3 +205,22 @@ export interface JsonObject {
 }
 export type JsonArray = Array<JsonValue>;
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
+
+/** Sections that the admin panel may read and publish. */
+export const AdminSectionSchema = z.enum([
+  "profile", "experience", "education", "projects", "skills",
+  "leadership", "certifications", "languages", "site",
+]);
+
+/** Uses the rendering schemas so invalid content cannot break the next deployment. */
+export const AdminSaveRequestSchema = z.discriminatedUnion("section", [
+  z.object({ section: z.literal("profile"), data: ProfileSchema }),
+  z.object({ section: z.literal("experience"), data: ExperienceSchema.array() }),
+  z.object({ section: z.literal("education"), data: EducationSchema.array() }),
+  z.object({ section: z.literal("projects"), data: ProjectSchema.array() }),
+  z.object({ section: z.literal("skills"), data: SkillCategorySchema.array() }),
+  z.object({ section: z.literal("leadership"), data: LeadershipSchema.array() }),
+  z.object({ section: z.literal("certifications"), data: CertificationSchema.array() }),
+  z.object({ section: z.literal("languages"), data: LanguageSchema.array() }),
+  z.object({ section: z.literal("site"), data: SiteConfigSchema }),
+]).and(z.object({ sha: z.string().regex(/^[a-f0-9]{40}$/).optional() }));

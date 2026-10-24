@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, Save, Eye, EyeOff, AlertCircle } from "lucide-react";
@@ -31,11 +31,17 @@ export default function SectionEditorPage() {
   const [saveError, setSaveError] = useState("");
   const [showJson, setShowJson] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [sha, setSha] = useState<string>();
 
-  useState(() => {
+  useEffect(() => {
+    if (!sectionName) return;
+    const controller = new AbortController();
     const loadData = async () => {
+      setLoading(true);
+      setError("");
+      setHasChanges(false);
       try {
-        const response = await fetch(`/api/admin/data/${sectionName}`);
+        const response = await fetch(`/api/admin/data/${sectionName}`, { signal: controller.signal });
         const result = await response.json();
 
         if (!response.ok || !result.success) {
@@ -44,14 +50,16 @@ export default function SectionEditorPage() {
         }
 
         setData(result.data as JsonValue);
+        setSha(result.sha);
       } catch {
-        setError("Failed to load data");
+        if (!controller.signal.aborted) setError("Failed to load data");
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
     loadData();
-  });
+    return () => controller.abort();
+  }, [sectionName]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -61,7 +69,7 @@ export default function SectionEditorPage() {
       const response = await fetch("/api/admin/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ section: sectionName, data }),
+        body: JSON.stringify({ section: sectionName, data, sha }),
       });
 
       const result = await response.json();
@@ -73,6 +81,7 @@ export default function SectionEditorPage() {
       }
 
       setHasChanges(false);
+      setSha(result.sha);
     } catch {
       setSaveError("Network error while saving");
     } finally {
@@ -181,7 +190,7 @@ export default function SectionEditorPage() {
         </div>
       )}
 
-      <div className="mt-6">
+      <fieldset className="mt-6" disabled={saving}>
         <GenericEditor
           data={data}
           onChange={(newData) => {
@@ -189,7 +198,7 @@ export default function SectionEditorPage() {
             setHasChanges(true);
           }}
         />
-      </div>
+      </fieldset>
     </div>
   );
 }

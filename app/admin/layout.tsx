@@ -42,7 +42,7 @@ export default function AdminLayout({
 
   const handleLogout = async () => {
     await fetch("/api/admin/auth", { method: "DELETE" });
-    window.location.href = "/admin/login";
+    window.location.assign(new URL("/admin/login", window.location.origin).href);
   };
 
   const isActive = (id: string) => pathname === `/admin/${id}`;
