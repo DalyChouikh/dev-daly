@@ -37,3 +37,16 @@ Email specimens were inspected at desktop and 320px, with logos loaded and block
 Provider delivery was verified through intercepted SMTP/API transports for MailHog, Gmail, and Resend. No external email was sent. Actual Gmail/Outlook inbox rendering and real provider delivery were not exercised. Browser tests also intercept publishing endpoints and do not commit portfolio content through the admin.
 
 The local visual-review proxy accepts only GET/HEAD, supplies a temporary test session in memory, and serves repository fixtures for content reads. It is a local inspection tool outside the repository, not an authentication bypass shipped with the app.
+
+## Hosted result
+
+- Implementation: `a69a748` on `feat/olive-editorial`, pushed successfully.
+- Preview: https://dev-daly-n9zobh9n9-dalychouikhs-projects.vercel.app
+- Deployment: `dpl_Hxtxc6kn2r8s44DUtEn7kJGJ54PB`, READY after a successful Vercel frozen install and production build.
+- `/admin/login`: HTTP 200, new Olive sign-in markup, no authenticated sidebar.
+- `/admin` without an admin session: HTTP 307 to `/admin/login?from=%2Fadmin`.
+- `/api/admin/data/projects` without an admin session: HTTP 401.
+- `/preview/contact-email.html`: HTTP 200; exact bytes match the committed specimen and its same-origin logo path. The sample label is visible.
+- Preview environment configuration includes the existing admin and email-provider keys; no secret values were read or changed.
+
+The preview retains Vercel authentication protection and the existing admin password workflow. This increment does not promote the redesign to production. Local visual-review servers were stopped after verification.

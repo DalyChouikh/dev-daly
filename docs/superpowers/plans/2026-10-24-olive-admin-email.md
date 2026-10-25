@@ -40,4 +40,4 @@
 - [x] Run types, lint, formatting, all unit/security tests, production build, full browser suite, and dependency audit.
 - [x] Inspect login/dashboard/editor/draft/upload and email at desktop/tablet/phone widths, plus pending/error states. Use the app-screen inspector and fix concrete failures.
 - [x] Perform an independent read-only review and resolve findings.
-- [ ] Commit and push the verified feature branch; deploy a working application preview and verify protected admin redirects and the sample email. Record evidence and limitations without sending external email or promoting production.
+- [x] Commit and push the verified feature branch; deploy a working application preview and verify protected admin redirects and the sample email. Record evidence and limitations without sending external email or promoting production.
