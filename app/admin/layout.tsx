@@ -1,163 +1,176 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Home,
-  User,
-  Code,
-  Briefcase,
-  GraduationCap,
-  FolderOpen,
-  Users,
-  Award,
-  Globe,
-  Settings,
-  LogOut,
-  Menu,
-  X,
-} from "lucide-react";
+import { ArrowUpRight, Home, LogOut, Menu, X } from "lucide-react";
+import { BrandLogo } from "@/components/brand/BrandLogo";
+import { ADMIN_SECTIONS } from "@/lib/admin-navigation";
+import "./admin.css";
 
-
-const navSections = [
-  { id: "profile", label: "Profile", icon: <User size={18} /> },
-  { id: "experience", label: "Experience", icon: <Briefcase size={18} /> },
-  { id: "education", label: "Education", icon: <GraduationCap size={18} /> },
-  { id: "projects", label: "Projects", icon: <FolderOpen size={18} /> },
-  { id: "skills", label: "Skills", icon: <Code size={18} /> },
-  { id: "leadership", label: "Leadership", icon: <Users size={18} /> },
-  { id: "certifications", label: "Certifications", icon: <Award size={18} /> },
-  { id: "languages", label: "Languages", icon: <Globe size={18} /> },
-  { id: "site", label: "Site Config", icon: <Settings size={18} /> },
-];
-
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+function AdminWorkspace({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [error, setError] = useState("");
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const sidebar = useRef<HTMLElement>(null);
+  const pendingLogout = useRef(false);
 
-  const handleLogout = async () => {
-    await fetch("/api/admin/auth", { method: "DELETE" });
-    window.location.assign(new URL("/admin/login", window.location.origin).href);
-  };
+  useEffect(() => {
+    if (!open) return;
+    sidebar.current?.querySelector<HTMLElement>("a")?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const desktop = window.matchMedia("(min-width: 1100px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setOpen(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        menuButton.current?.focus();
+      }
+      if (event.key === "Tab") {
+        const controls = sidebar.current?.querySelectorAll<HTMLElement>(
+          "a, button:not([disabled])",
+        );
+        if (!controls?.length) return;
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKey);
+      desktop.removeEventListener("change", closeOnDesktop);
+    };
+  }, [open]);
 
-  const isActive = (id: string) => pathname === `/admin/${id}`;
+  async function logout() {
+    if (pendingLogout.current) return;
+    pendingLogout.current = true;
+    setLoggingOut(true);
+    setError("");
+    try {
+      const response = await fetch("/api/admin/auth", { method: "DELETE" });
+      if (!response.ok) throw new Error("Logout failed");
+      window.location.assign(
+        new URL("/admin/login", window.location.origin).href,
+      );
+    } catch {
+      setError("Couldn’t log out. Please try again.");
+      pendingLogout.current = false;
+      setLoggingOut(false);
+    }
+  }
 
   return (
-    <div className="flex min-h-screen bg-surface">
-      {/* Mobile sidebar toggle */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-surface-container text-on-surface md:hidden"
-        aria-label="Toggle sidebar"
-      >
-        {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
-      {/* Sidebar */}
+    <div className="admin-shell">
+      <a className="admin-skip-link" href="#admin-content">
+        Skip to content
+      </a>
+      <header className="admin-mobile-bar">
+        <Link href="/admin" aria-label="Daly administration">
+          <BrandLogo />
+        </Link>
+        <button
+          ref={menuButton}
+          className="admin-icon-button"
+          type="button"
+          aria-label={open ? "Close admin navigation" : "Open admin navigation"}
+          aria-controls="admin-sidebar"
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+        >
+          {open ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </header>
       <aside
-        className={[
-          "fixed left-0 top-0 z-40 h-full w-64 border-r border-white/10 bg-surface-container-low/80 backdrop-blur-[20px] transition-transform duration-300 md:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full",
-        ].join(" ")}
+        className="admin-sidebar"
+        id="admin-sidebar"
+        data-open={open}
+        ref={sidebar}
+        role={open ? "dialog" : undefined}
+        aria-modal={open ? true : undefined}
+        aria-label="Administration menu"
       >
-        <div className="flex h-full flex-col p-6">
-          {/* Logo */}
-          <div className="mb-8">
-            <Link href="/admin" className="text-xl font-bold text-primary">
-              Daly Admin
-            </Link>
-            <p className="mt-1 text-xs text-on-surface-variant">
-              Content Management
-            </p>
-          </div>
-
-          {/* Nav */}
-          <nav className="flex-1 space-y-1">
-            <NavItem
-              href="/admin"
-              icon={<Home size={18} />}
-              label="Dashboard"
-              active={pathname === "/admin"}
-            />
-
-            <div className="my-4 border-t border-white/10" />
-
-            {navSections.map((section) => (
-              <NavItem
-                key={section.id}
-                href={`/admin/${section.id}`}
-                icon={section.icon}
-                label={section.label}
-                active={isActive(section.id)}
-              />
-            ))}
-          </nav>
-
-          {/* Footer */}
-          <div className="space-y-2 pt-4">
-            <div className="border-t border-white/10" />
+        <div className="admin-sidebar-brand">
+          <Link href="/admin" aria-label="Daly administration">
+            <BrandLogo />
+          </Link>
+          <p>Portfolio workspace</p>
+        </div>
+        <nav aria-label="Admin navigation">
+          <Link
+            href="/admin"
+            aria-current={pathname === "/admin" ? "page" : undefined}
+          >
+            <Home size={17} aria-hidden="true" />
+            Dashboard
+          </Link>
+          <p className="admin-nav-label">Content</p>
+          {ADMIN_SECTIONS.map((section) => (
             <Link
-              href="/"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-on-surface-variant transition-colors hover:bg-white/5 hover:text-on-surface"
+              key={section.id}
+              href={"/admin/" + section.id}
+              aria-current={
+                pathname === "/admin/" + section.id ||
+                (section.id === "projects" &&
+                  pathname.startsWith("/admin/projects/"))
+                  ? "page"
+                  : undefined
+              }
             >
-              <Globe size={16} />
-              View Site
+              {section.label}
             </Link>
-            <button
-              onClick={handleLogout}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-on-surface-variant transition-colors hover:bg-white/5 hover:text-error"
-            >
-              <LogOut size={16} />
-              Logout
-            </button>
-          </div>
+          ))}
+        </nav>
+        <div className="admin-sidebar-footer">
+          <Link href="/">
+            View portfolio
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
+          <button onClick={logout} disabled={loggingOut} type="button">
+            <LogOut size={16} aria-hidden="true" />
+            {loggingOut ? "Logging out…" : "Logout"}
+          </button>
+          {error ? (
+            <p role="alert" className="admin-feedback admin-feedback--error">
+              {error}
+            </p>
+          ) : null}
         </div>
       </aside>
-
-      {/* Main content */}
-      <main className="flex-1 md:ml-64">
-        <div className="p-6 md:p-8">{children}</div>
-      </main>
-
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black/50 md:hidden"
-          onClick={() => setSidebarOpen(false)}
+      {open ? (
+        <button
+          className="admin-scrim"
+          onClick={() => setOpen(false)}
+          type="button"
+          aria-label="Close admin navigation"
+          tabIndex={-1}
         />
-      )}
+      ) : null}
+      <main className="admin-canvas" id="admin-content" inert={open}>
+        {children}
+      </main>
     </div>
   );
 }
 
-function NavItem({
-  href,
-  icon,
-  label,
-  active,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  label: string;
-  active: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={[
-        "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-        active
-          ? "bg-primary/10 text-primary"
-          : "text-on-surface-variant hover:bg-white/5 hover:text-on-surface",
-      ].join(" ")}
-    >
-      {icon}
-      {label}
-    </Link>
-  );
+/** Keeps the login composition independent from authenticated workspace controls. */
+export default function AdminLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  if (pathname === "/admin/login")
+    return <div className="admin-shell admin-shell--login">{children}</div>;
+  return <AdminWorkspace key={pathname}>{children}</AdminWorkspace>;
 }

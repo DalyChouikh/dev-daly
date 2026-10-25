@@ -6,17 +6,30 @@ import type { ContactForm } from "./types";
 /** Email provider type — switch via EMAIL_PROVIDER env var */
 export type EmailProvider = "mailhog" | "resend" | "gmail";
 
+/** Shared message alternatives and headers, generated once before provider delivery. */
+interface ContactEmailContent {
+  subject: string;
+  text: string;
+  html: string;
+  replyTo: string;
+}
+
 /** Gets the configured email provider from env */
 function getProvider(): EmailProvider {
   const provider = process.env.EMAIL_PROVIDER ?? "mailhog";
   if (!["mailhog", "resend", "gmail"].includes(provider)) {
-    throw new Error(`Unknown EMAIL_PROVIDER: ${provider}. Use mailhog, resend, or gmail.`);
+    throw new Error(
+      `Unknown EMAIL_PROVIDER: ${provider}. Use mailhog, resend, or gmail.`,
+    );
   }
   return provider as EmailProvider;
 }
 
 /** MailHog client for local development — sends via SMTP to MailHog's catch-all server */
-async function sendViaMailHog(form: ContactForm): Promise<{ id: string }> {
+async function sendViaMailHog(
+  form: ContactForm,
+  content: ContactEmailContent,
+): Promise<{ id: string }> {
   const host = process.env.MAILHOG_HOST ?? "localhost";
   const port = Number(process.env.MAILHOG_PORT ?? "1025");
 
@@ -34,19 +47,18 @@ async function sendViaMailHog(form: ContactForm): Promise<{ id: string }> {
   });
 
   const result = await transporter.sendMail({
-    from: `"${form.name}" <${form.email}>`,
+    from: { name: form.name, address: form.email },
     to: process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com",
-    subject: `Portfolio Contact: ${form.name}`,
-    text: buildContactEmailText(form),
-    html: buildContactEmailHtml(form),
-    replyTo: form.email,
+    ...content,
   });
 
   return { id: result.messageId ?? `mailhog-${Date.now()}` };
 }
 
 /** Resend client for production */
-async function sendViaResend(form: ContactForm): Promise<{ id: string }> {
+async function sendViaResend(
+  content: ContactEmailContent,
+): Promise<{ id: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     throw new Error("RESEND_API_KEY environment variable is not set");
@@ -56,10 +68,7 @@ async function sendViaResend(form: ContactForm): Promise<{ id: string }> {
   const { data, error } = await resend.emails.send({
     from: "Portfolio <contact@dev-daly.tn>",
     to: [process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com"],
-    subject: `Portfolio Contact: ${form.name}`,
-    text: buildContactEmailText(form),
-    html: buildContactEmailHtml(form),
-    replyTo: form.email,
+    ...content,
   });
 
   if (error) {
@@ -70,7 +79,9 @@ async function sendViaResend(form: ContactForm): Promise<{ id: string }> {
 }
 
 /** Gmail SMTP via nodemailer */
-async function sendViaGmail(form: ContactForm): Promise<{ id: string }> {
+async function sendViaGmail(
+  content: ContactEmailContent,
+): Promise<{ id: string }> {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -82,10 +93,7 @@ async function sendViaGmail(form: ContactForm): Promise<{ id: string }> {
   const result = await transporter.sendMail({
     from: process.env.GMAIL_USER,
     to: process.env.CONTACT_EMAIL ?? "chouikhdaly215@gmail.com",
-    subject: `Portfolio Contact: ${form.name}`,
-    text: buildContactEmailText(form),
-    html: buildContactEmailHtml(form),
-    replyTo: form.email,
+    ...content,
   });
 
   return { id: result.messageId ?? `gmail-${Date.now()}` };
@@ -95,15 +103,24 @@ async function sendViaGmail(form: ContactForm): Promise<{ id: string }> {
  * Sends a contact form email using the configured provider.
  * Provider is selected via EMAIL_PROVIDER env var (default: mailhog).
  */
-export async function sendContactEmail(form: ContactForm): Promise<{ id: string }> {
+export async function sendContactEmail(
+  form: ContactForm,
+): Promise<{ id: string }> {
   const provider = getProvider();
+  const options = { receivedAt: new Date() };
+  const content: ContactEmailContent = {
+    subject: `Portfolio Contact: ${form.name}`,
+    text: buildContactEmailText(form, options),
+    html: buildContactEmailHtml(form, options),
+    replyTo: form.email,
+  };
 
   switch (provider) {
     case "mailhog":
-      return sendViaMailHog(form);
+      return sendViaMailHog(form, content);
     case "resend":
-      return sendViaResend(form);
+      return sendViaResend(content);
     case "gmail":
-      return sendViaGmail(form);
+      return sendViaGmail(content);
   }
 }

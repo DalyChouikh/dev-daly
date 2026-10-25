@@ -1,167 +1,167 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  User,
-  Code,
-  Briefcase,
-  GraduationCap,
-  FolderOpen,
-  Users,
-  Award,
-  Globe,
-  Settings,
-  Plus,
-  FileText,
-  Upload,
-} from "lucide-react";
-import { GitHub } from "@/components/ui/icons/GitHub";
+import { ArrowRight, ArrowUpRight, RefreshCw } from "lucide-react";
+import { z } from "zod";
 import { ResumeUploader } from "@/components/admin/ResumeUploader";
+import { ADMIN_SECTIONS } from "@/lib/admin-navigation";
 
-const sections = [
-  { id: "profile", label: "Profile", icon: <User size={20} />, count: null },
-  { id: "experience", label: "Experience", icon: <Briefcase size={20} />, count: 3 },
-  { id: "education", label: "Education", icon: <GraduationCap size={20} />, count: 2 },
-  { id: "projects", label: "Projects", icon: <FolderOpen size={20} />, count: 4 },
-  { id: "skills", label: "Skills", icon: <Code size={20} />, count: 7 },
-  { id: "leadership", label: "Leadership", icon: <Users size={20} />, count: 1 },
-  { id: "certifications", label: "Certifications", icon: <Award size={20} />, count: 2 },
-  { id: "languages", label: "Languages", icon: <Globe size={20} />, count: 3 },
-  { id: "site", label: "Site Config", icon: <Settings size={20} />, count: null },
-];
+const CountResponseSchema = z.object({
+  success: z.literal(true),
+  data: z.array(z.json()),
+});
+type CountResult = { count?: number; failed?: boolean };
 
+/** Reads current repository content so a pending or failed deploy cannot stale the inventory. */
 export default function AdminDashboardPage() {
+  const [counts, setCounts] = useState<Record<string, CountResult>>({});
+  const [reading, setReading] = useState(true);
+  const [revision, setRevision] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    async function readInventory() {
+      const results = await Promise.all(
+        ADMIN_SECTIONS.filter((section) => section.collection).map(
+          async (section) => {
+            try {
+              const response = await fetch("/api/admin/data/" + section.id, {
+                cache: "no-store",
+                signal: controller.signal,
+              });
+              const result = CountResponseSchema.safeParse(
+                await response.json(),
+              );
+              if (!response.ok || !result.success)
+                return [section.id, { failed: true }] as const;
+              return [section.id, { count: result.data.data.length }] as const;
+            } catch {
+              return [section.id, { failed: true }] as const;
+            }
+          },
+        ),
+      );
+      if (controller.signal.aborted) return;
+      setCounts(Object.fromEntries(results));
+      setReading(false);
+    }
+    void readInventory();
+    return () => controller.abort();
+  }, [revision]);
+
   return (
-    <div>
-      <h1 className="font-display text-3xl font-bold text-on-surface">
-        Dashboard
-      </h1>
-      <p className="mt-2 text-on-surface-variant">
-        Manage your portfolio content.
-      </p>
-
-      {/* Quick Actions */}
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <QuickActionCard
-          href="/admin/projects"
-          icon={<Plus size={20} />}
-          label="Add Project"
-          description="Manually add a new project"
-        />
-        <QuickActionCard
+    <div className="admin-page">
+      <header className="admin-page-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p className="admin-page-copy">
+            A place for the work behind your portfolio.
+          </p>
+        </div>
+        <Link
           href="/admin/projects/draft"
-          icon={<GitHub className="h-[20px] w-[20px]" />}
-          label="GitHub Draft"
-          description="Auto-generate from GitHub repo"
-          primary
-        />
-        <QuickActionCard
-          href="#resume"
-          icon={<Upload size={20} />}
-          label="Upload Resume"
-          description="Replace your PDF resume"
-        />
-      </div>
-
-      {/* Resume Management */}
-      <div className="mt-10">
-        <h2 className="mb-4 font-display text-lg font-semibold text-on-surface">
-          Resume
-        </h2>
-        <div className="glass-card glass-card-hover p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary">
-              <FileText size={20} />
-            </div>
+          className="admin-button admin-button--primary"
+        >
+          Draft from GitHub
+          <ArrowUpRight size={17} aria-hidden="true" />
+        </Link>
+      </header>
+      <div className="admin-overview-grid">
+        <section
+          className="admin-inventory"
+          aria-labelledby="admin-content-heading"
+        >
+          <div className="admin-panel-header">
             <div>
-              <h3 className="font-semibold text-on-surface">Upload Resume</h3>
-              <p className="text-sm text-on-surface-variant">
-                PDF only, max 10 MB. Replaces the current /resume.pdf.
+              <h2 id="admin-content-heading">Your content</h2>
+              <p className="admin-muted">
+                Edit a section, then save it to GitHub.
               </p>
             </div>
+            <button
+              className="admin-button admin-button--quiet"
+              type="button"
+              disabled={reading}
+              onClick={() => {
+                setReading(true);
+                setRevision((value) => value + 1);
+              }}
+            >
+              <RefreshCw size={15} aria-hidden="true" />
+              {reading ? "Reading…" : "Refresh"}
+            </button>
           </div>
-          <ResumeUploader currentResumeUrl="/resume.pdf" />
-        </div>
-      </div>
-
-      {/* Section Grid */}
-      <div className="mt-10">
-        <h2 className="mb-4 font-display text-lg font-semibold text-on-surface">
-          Content Sections
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {sections.map((section) => (
-            <SectionCard key={section.id} section={section} />
-          ))}
+          <div className="admin-content-list">
+            {ADMIN_SECTIONS.map((section) => (
+              <Link
+                className="admin-content-row"
+                data-admin-section={section.id}
+                href={"/admin/" + section.id}
+                key={section.id}
+              >
+                <div>
+                  <h3>{section.label}</h3>
+                  <p>{section.description}</p>
+                </div>
+                <span className="admin-content-count">
+                  {section.collection
+                    ? counts[section.id]?.count !== undefined
+                      ? counts[section.id].count +
+                        (counts[section.id].count === 1 ? " entry" : " entries")
+                      : counts[section.id]?.failed
+                        ? "Count unavailable"
+                        : "Loading…"
+                    : "Settings"}
+                </span>
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
+          <p className="admin-inventory-note" role="status">
+            {reading
+              ? "Reading current content…"
+              : Object.values(counts).some((item) => item.failed)
+                ? "Some counts couldn’t be read. Open the section or refresh to try again."
+                : "Counts reflect the current content source."}
+          </p>
+        </section>
+        <div className="admin-overview-side">
+          <section className="admin-publishing-note">
+            <h2>From edit to live.</h2>
+            <p>
+              Saving commits your changes to GitHub. Vercel rebuilds the
+              portfolio after the commit.
+            </p>
+            <p>
+              If a save conflicts with another edit, keep your changes and
+              reload the latest version before saving again.
+            </p>
+            <div className="admin-actions">
+              <Link className="admin-button" href="/admin/projects">
+                Edit projects
+              </Link>
+              <Link className="admin-text-link" href="#resume">
+                Upload résumé
+              </Link>
+            </div>
+          </section>
+          <section
+            className="admin-panel"
+            id="resume"
+            aria-labelledby="admin-resume-heading"
+          >
+            <div className="admin-panel-header">
+              <div>
+                <h2 id="admin-resume-heading">Résumé</h2>
+                <p className="admin-muted">
+                  Replace the PDF visitors can download.
+                </p>
+              </div>
+            </div>
+            <ResumeUploader currentResumeUrl="/resume.pdf" />
+          </section>
         </div>
       </div>
     </div>
-  );
-}
-
-function QuickActionCard({
-  href,
-  icon,
-  label,
-  description,
-  primary = false,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-  primary?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={[
-        "flex items-center gap-4 rounded-default border p-5 transition-all duration-300",
-        primary
-          ? "border-primary/30 bg-primary/5 hover:border-primary/60 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)]"
-          : "border-white/10 bg-white/[0.03] hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]",
-      ].join(" ")}
-    >
-      <div
-        className={[
-          "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-          primary ? "bg-primary/20 text-primary" : "bg-white/10 text-on-surface-variant",
-        ].join(" ")}
-      >
-        {icon}
-      </div>
-      <div>
-        <h3 className="font-semibold text-on-surface">{label}</h3>
-        <p className="text-sm text-on-surface-variant">{description}</p>
-      </div>
-    </Link>
-  );
-}
-
-function SectionCard({
-  section,
-}: {
-  section: { id: string; label: string; icon: React.ReactNode; count: number | null };
-}) {
-  return (
-    <Link
-      href={`/admin/${section.id}`}
-      className="flex items-center justify-between rounded-default border border-white/10 bg-white/[0.03] p-5 backdrop-blur-[20px] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]"
-    >
-      <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-on-surface-variant">
-          {section.icon}
-        </div>
-        <div>
-          <h3 className="font-semibold text-on-surface">{section.label}</h3>
-          {section.count !== null && (
-            <p className="text-xs text-on-surface-variant">
-              {section.count} {section.count === 1 ? "entry" : "entries"}
-            </p>
-          )}
-        </div>
-      </div>
-      <div className="text-sm text-primary">Edit →</div>
-    </Link>
   );
 }

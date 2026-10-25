@@ -1,16 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Save, Loader2 } from "lucide-react";
+import { ArrowLeft, Sparkles, Save } from "lucide-react";
 import { GitHub } from "@/components/ui/icons/GitHub";
-import type { DraftProject } from "@/lib/types";
+import { mergeProjectDraft } from "@/lib/admin-editor";
+import type { AIEnhanceResponse, DraftProject, JsonArray } from "@/lib/types";
 
 interface DraftState {
   draft: DraftProject;
   readmeContent: string;
 }
 
+interface DraftResponse {
+  success: boolean;
+  draft?: DraftProject;
+  readmeContent?: string;
+  error?: string;
+}
+
+interface EnhanceResponse {
+  success: boolean;
+  result?: AIEnhanceResponse;
+  error?: string;
+}
+
+interface ProjectsResponse {
+  success: boolean;
+  data: JsonArray;
+  sha?: string;
+  error?: string;
+}
+
+/** Builds a reviewable GitHub draft and merges it into the latest project revision. */
 export default function GitHubDraftPage() {
   const [repoUrl, setRepoUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,14 +41,14 @@ export default function GitHubDraftPage() {
   const [enhancing, setEnhancing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const draft = draftState?.draft;
+  const busy = loading || enhancing || saving;
 
-  const draft = draftState?.draft ?? null;
-
-  const handleFetch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleFetch = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (busy) return;
     setLoading(true);
     setError("");
-    setDraftState(null);
     setSaveSuccess(false);
 
     try {
@@ -35,30 +57,27 @@ export default function GitHubDraftPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ repoUrl }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
+      const data: DraftResponse = await response.json();
+      if (!response.ok || !data.success || !data.draft) {
         setError(data.error ?? "Failed to fetch repository");
-        setLoading(false);
         return;
       }
-
       setDraftState({
         draft: data.draft,
         readmeContent: data.readmeContent ?? "",
       });
     } catch {
-      setError("Network error");
+      setError("Network error while fetching the repository. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleEnhance = async () => {
-    if (!draftState) return;
+    if (!draftState || busy) return;
     setEnhancing(true);
     setError("");
+    setSaveSuccess(false);
 
     try {
       const response = await fetch("/api/ai-enhance", {
@@ -72,24 +91,12 @@ export default function GitHubDraftPage() {
           techStack: draftState.draft.techStack,
         }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
+      const data: EnhanceResponse = await response.json();
+      if (!response.ok || !data.success || !data.result) {
         setError(data.error ?? "AI enhancement failed");
-        setEnhancing(false);
         return;
       }
-
       const result = data.result;
-
-      // Append AI content to existing bullets (keep originals, don't replace)
-      const appendedBullets = [
-        ...draftState.draft.bullets,
-        ...(result.enhancedDescription ? [result.enhancedDescription] : []),
-        ...(result.bullets ?? []),
-      ];
-
       setDraftState({
         ...draftState,
         draft: {
@@ -97,61 +104,82 @@ export default function GitHubDraftPage() {
           title: result.title ?? draftState.draft.title,
           tagline: result.tagline ?? draftState.draft.tagline,
           techStack: result.techStack ?? draftState.draft.techStack,
-          bullets: appendedBullets,
+          bullets: [
+            ...draftState.draft.bullets,
+            ...(result.enhancedDescription ? [result.enhancedDescription] : []),
+            ...(result.bullets ?? []),
+          ],
         },
       });
     } catch {
-      setError("Network error during AI enhancement");
+      setError(
+        "Network error during AI enhancement. Your draft is still here; try again.",
+      );
     } finally {
       setEnhancing(false);
     }
   };
 
   const handleSave = async () => {
-    if (!draft) return;
+    if (!draft || busy) return;
     setSaving(true);
     setError("");
     setSaveSuccess(false);
 
     try {
-      // Fetch current projects via API (data/ dir is not statically served)
-      const projectsResponse = await fetch("/api/admin/data/projects");
-      const projectsResult = await projectsResponse.json();
-
-      if (!projectsResponse.ok || !projectsResult.success) {
+      const projectsResponse = await fetch("/api/admin/data/projects", {
+        cache: "no-store",
+      });
+      const projectsResult: ProjectsResponse = await projectsResponse.json();
+      if (
+        !projectsResponse.ok ||
+        !projectsResult.success ||
+        !Array.isArray(projectsResult.data)
+      ) {
         setError(projectsResult.error ?? "Failed to load existing projects");
-        setSaving(false);
         return;
       }
-
-      const projects = projectsResult.data as DraftProject[];
-      const updated = [...projects, draft];
-
-      // Save updated projects
+      const updated = mergeProjectDraft(projectsResult.data, {
+        ...draft,
+        techStack: draft.techStack
+          .map((technology) => technology.trim())
+          .filter(Boolean),
+        bullets: draft.bullets.map((bullet) => bullet.trim()).filter(Boolean),
+      });
       const response = await fetch("/api/admin/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ section: "projects", data: updated, sha: projectsResult.sha }),
+        body: JSON.stringify({
+          section: "projects",
+          data: updated,
+          sha: projectsResult.sha,
+        }),
       });
-
-      const data = await response.json();
-
+      const data: ProjectsResponse = await response.json();
       if (!response.ok || !data.success) {
-        setError(data.error ?? "Failed to save project");
-        setSaving(false);
+        setError(
+          response.status === 409
+            ? `${data.error ?? "The projects changed before saving."} Your draft is kept here; try again to use the latest revision.`
+            : (data.error ?? "Failed to save project"),
+        );
         return;
       }
-
       setSaveSuccess(true);
     } catch {
-      setError("Network error while saving");
+      setError(
+        "Network error while saving. Your draft is still here; try again.",
+      );
     } finally {
       setSaving(false);
     }
   };
 
-  const handleChange = (field: keyof DraftProject, value: string | string[]) => {
-    if (!draftState) return;
+  const handleChange = (
+    field: keyof DraftProject,
+    value: string | string[],
+  ) => {
+    if (!draftState || busy) return;
+    setSaveSuccess(false);
     setDraftState({
       ...draftState,
       draft: { ...draftState.draft, [field]: value },
@@ -159,195 +187,205 @@ export default function GitHubDraftPage() {
   };
 
   return (
-    <div>
-      <Link
-        href="/admin"
-        className="inline-flex items-center gap-1 text-sm text-on-surface-variant transition-colors hover:text-primary"
-      >
-        <ArrowLeft size={14} />
-        Dashboard
-      </Link>
-
-      <h1 className="mt-2 font-display text-2xl font-bold text-on-surface">
-        GitHub Auto-Draft
-      </h1>
-      <p className="mt-1 text-on-surface-variant">
-        Generate a project entry from a GitHub repository.
-      </p>
-
-      {/* URL Input */}
-      <form onSubmit={handleFetch} className="mt-6">
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <input
-            type="url"
-            value={repoUrl}
-            onChange={(e) => setRepoUrl(e.target.value)}
-            placeholder="https://github.com/username/repo"
-            required
-            className="flex-1 rounded-default border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-on-surface outline-none transition-all focus:border-primary"
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-on-primary transition-all hover:scale-[1.02] disabled:opacity-50"
-          >
-            {loading ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <GitHub className="h-[16px] w-[16px]" />
-            )}
-            {loading ? "Fetching..." : "Fetch Repo"}
-          </button>
+    <div className="admin-page" aria-busy={busy}>
+      <header className="admin-page-header">
+        <div>
+          <Link href="/admin" className="admin-breadcrumb">
+            <ArrowLeft size={14} aria-hidden="true" /> Dashboard
+          </Link>
+          <h1>GitHub Auto-Draft</h1>
+          <p className="admin-page-copy">
+            Start with a repository, then review your project before publishing.
+          </p>
         </div>
+        <Link
+          href="/admin/projects"
+          className="admin-button admin-button--quiet"
+        >
+          View projects
+        </Link>
+      </header>
+
+      <form onSubmit={handleFetch} className="admin-panel">
+        <fieldset disabled={busy} className="admin-field">
+          <label className="admin-field-label" htmlFor="draft-repository">
+            GitHub repository URL
+          </label>
+          <div className="admin-actions">
+            <input
+              id="draft-repository"
+              type="url"
+              className="admin-input"
+              value={repoUrl}
+              onChange={(event) => setRepoUrl(event.target.value)}
+              placeholder="https://github.com/username/repo"
+              required
+            />
+            <button type="submit" className="admin-button">
+              <GitHub width={16} height={16} aria-hidden="true" />
+              {loading ? "Fetching..." : "Fetch Repo"}
+            </button>
+          </div>
+          <p className="admin-muted">
+            Fetching another repository replaces the current draft after it
+            loads.
+          </p>
+        </fieldset>
       </form>
 
       {error && (
-        <div className="mt-4 rounded-lg border border-error/30 bg-error/10 p-3 text-sm text-error">
+        <div className="admin-feedback admin-feedback--error" role="alert">
           {error}
         </div>
       )}
+      {busy && (
+        <p className="admin-feedback" role="status">
+          {loading
+            ? "Fetching repository…"
+            : enhancing
+              ? "Enhancing your draft…"
+              : "Saving your project…"}
+        </p>
+      )}
 
-      {/* Draft Editor */}
-      {draft && (
-        <div className="mt-8 rounded-default border border-white/10 bg-white/[0.03] p-6 backdrop-blur-[20px]">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-on-surface">
-              Draft Project
-            </h2>
-            <div className="flex gap-2">
-              <button
-                onClick={handleEnhance}
-                disabled={enhancing}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary transition-colors hover:bg-primary/20"
-              >
-                {enhancing ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  <Sparkles size={14} />
-                )}
-                {enhancing ? "Enhancing..." : "Enhance with AI"}
-              </button>
-            </div>
+      {draft ? (
+        <section className="admin-panel" aria-labelledby="draft-heading">
+          <div className="admin-panel-header">
+            <h2 id="draft-heading">Draft Project</h2>
+            <button
+              type="button"
+              onClick={handleEnhance}
+              disabled={busy}
+              className="admin-button"
+            >
+              <Sparkles size={16} aria-hidden="true" />
+              {enhancing ? "Enhancing..." : "Enhance with AI"}
+            </button>
           </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-on-surface-variant">
+          <fieldset disabled={busy} className="admin-form-grid">
+            <legend className="sr-only">Project details</legend>
+            <div className="admin-field">
+              <label className="admin-field-label" htmlFor="draft-title">
                 Title
               </label>
               <input
-                type="text"
+                id="draft-title"
+                className="admin-input"
                 value={draft.title}
-                onChange={(e) => handleChange("title", e.target.value)}
-                className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
+                onChange={(event) => handleChange("title", event.target.value)}
               />
             </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-on-surface-variant">
+            <div className="admin-field">
+              <label className="admin-field-label" htmlFor="draft-tagline">
                 Tagline
               </label>
               <input
-                type="text"
+                id="draft-tagline"
+                className="admin-input"
                 value={draft.tagline}
-                onChange={(e) => handleChange("tagline", e.target.value)}
-                className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
+                onChange={(event) =>
+                  handleChange("tagline", event.target.value)
+                }
               />
             </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-on-surface-variant">
+            <div className="admin-field">
+              <label className="admin-field-label" htmlFor="draft-tech">
                 Tech Stack (comma-separated)
               </label>
               <input
-                type="text"
+                id="draft-tech"
+                className="admin-input"
                 value={draft.techStack.join(", ")}
-                onChange={(e) =>
+                onChange={(event) =>
                   handleChange(
                     "techStack",
-                    e.target.value.split(",").map((s) => s.trim()),
+                    event.target.value
+                      .split(",")
+                      .map((technology) => technology.trim()),
                   )
                 }
-                className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
               />
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-on-surface-variant">
-                  Year
-                </label>
-                <input
-                  type="text"
-                  value={draft.year}
-                  onChange={(e) => handleChange("year", e.target.value)}
-                  className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-on-surface-variant">
-                  GitHub URL
-                </label>
-                <input
-                  type="url"
-                  value={draft.githubUrl}
-                  onChange={(e) => handleChange("githubUrl", e.target.value)}
-                  className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
-                />
-              </div>
+            <div className="admin-field">
+              <label className="admin-field-label" htmlFor="draft-year">
+                Year
+              </label>
+              <input
+                id="draft-year"
+                className="admin-input"
+                value={draft.year}
+                onChange={(event) => handleChange("year", event.target.value)}
+              />
             </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-on-surface-variant">
+            <div className="admin-field">
+              <label className="admin-field-label" htmlFor="draft-github">
+                GitHub URL
+              </label>
+              <input
+                id="draft-github"
+                type="url"
+                className="admin-input"
+                value={draft.githubUrl}
+                onChange={(event) =>
+                  handleChange("githubUrl", event.target.value)
+                }
+              />
+            </div>
+            <div className="admin-field">
+              <label className="admin-field-label" htmlFor="draft-live">
                 Live URL (optional)
               </label>
               <input
+                id="draft-live"
                 type="url"
+                className="admin-input"
                 value={draft.liveUrl}
-                onChange={(e) => handleChange("liveUrl", e.target.value)}
-                className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
+                onChange={(event) =>
+                  handleChange("liveUrl", event.target.value)
+                }
               />
             </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-on-surface-variant">
+            <div className="admin-editor-field">
+              <label className="admin-field-label" htmlFor="draft-bullets">
                 Description Bullets (one per line)
               </label>
               <textarea
+                id="draft-bullets"
+                className="admin-textarea"
+                rows={6}
                 value={draft.bullets.join("\n")}
-                onChange={(e) =>
-                  handleChange(
-                    "bullets",
-                    e.target.value.split("\n").filter((s) => s.trim()),
-                  )
+                onChange={(event) =>
+                  handleChange("bullets", event.target.value.split("\n"))
                 }
-                rows={4}
-                className="w-full rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-on-surface outline-none transition-all focus:border-primary"
               />
             </div>
-          </div>
-
-          <div className="mt-6">
+          </fieldset>
+          <div className="admin-actions">
             <button
+              type="button"
               onClick={handleSave}
-              disabled={saving}
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-on-primary transition-all hover:scale-[1.02] disabled:opacity-50"
+              disabled={busy}
+              className="admin-button admin-button--primary"
             >
-              {saving ? (
-                <Loader2 size={16} className="animate-spin" />
-              ) : (
-                <Save size={16} />
-              )}
+              <Save size={16} aria-hidden="true" />
               {saving ? "Saving..." : "Save to Projects"}
             </button>
+            <p className="admin-muted">
+              Saving again updates this project without creating another entry.
+            </p>
           </div>
-
           {saveSuccess && (
-            <div className="mt-4 rounded-lg border border-primary/30 bg-primary/10 p-3 text-sm text-primary">
+            <p className="admin-feedback admin-feedback--success" role="status">
               Project saved successfully!
-            </div>
+            </p>
           )}
-        </div>
+        </section>
+      ) : (
+        !loading && (
+          <div className="admin-empty">
+            Your project draft will appear here after fetching a repository.
+          </div>
+        )
       )}
     </div>
   );

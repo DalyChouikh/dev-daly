@@ -112,6 +112,10 @@ Push to `main` branch. Vercel auto-deploys on every push.
 
 Access `/admin` on your deployed site. Login with the `ADMIN_PASSWORD` you set.
 
+The admin workspace uses the same Olive identity as the public portfolio. Its inventory reads current repository content through authenticated APIs, so counts remain current while deployments are pending. Editors retain local changes on failed saves and conflicts, and GitHub drafts update an existing project by ID while preserving its display and media settings.
+
+Contact notifications use the Olive email template with both HTML and plain-text alternatives. Run `bun run preview:email` to regenerate the clearly labelled, fictional specimen at `/preview/contact-email.html`. This command writes preview files only; it does not send email. The real template uses the configured HTTPS `NEXT_PUBLIC_APP_URL` for the portfolio and PNG logo; if that value is missing or unsafe, the notification keeps its text identity and omits those links.
+
 ## Updating Content
 
 1. **Via Admin Panel**: Go to `/admin`, edit sections, save changes

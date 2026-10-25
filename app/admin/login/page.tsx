@@ -1,109 +1,134 @@
 "use client";
 
-import { Suspense } from "react";
-import { useState } from "react";
+import { Suspense, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { z } from "zod";
+import { BrandLogo } from "@/components/brand/BrandLogo";
+
+const AuthResponseSchema = z.object({
+  success: z.boolean(),
+  error: z.string().optional(),
+});
 
 function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const pending = useRef(false);
   const searchParams = useSearchParams();
   const requestedFrom = searchParams.get("from") ?? "/admin";
-  const from = /^\/admin(?:\/[A-Za-z0-9_-]+)*\/?$/.test(requestedFrom) ? requestedFrom : "/admin";
+  const from = /^\/admin(?:\/[A-Za-z0-9_-]+)*\/?$/.test(requestedFrom)
+    ? requestedFrom
+    : "/admin";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (pending.current) return;
+    pending.current = true;
     setError("");
     setLoading(true);
-
     try {
       const response = await fetch("/api/admin/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        setError(data.error ?? "Authentication failed");
+      const result = AuthResponseSchema.safeParse(await response.json());
+      if (!response.ok || !result.success || !result.data.success) {
+        setError(
+          result.success
+            ? (result.data.error ?? "Authentication failed. Try again.")
+            : "Couldn’t sign in. Try again.",
+        );
         setLoading(false);
+        pending.current = false;
         return;
       }
-
       // A full navigation discards redirects prefetched before the session cookie was set.
       window.location.assign(new URL(from, window.location.origin).href);
     } catch {
-      setError("Network error");
+      setError("Couldn’t connect. Please try again.");
       setLoading(false);
+      pending.current = false;
     }
-  };
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div>
-        <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
+    <form onSubmit={handleSubmit} aria-busy={loading}>
+      <div className="admin-field">
+        <label className="admin-field-label" htmlFor="password">
           Password
         </label>
         <input
+          className="admin-input"
           type="password"
           id="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(event) => setPassword(event.target.value)}
           required
-          className="w-full rounded-default border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-on-surface outline-none transition-all duration-200 focus:border-primary focus:ring-1 focus:ring-primary/50"
-          placeholder="Enter admin password"
+          autoComplete="current-password"
+          disabled={loading}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? "login-error" : undefined}
+          placeholder="Your admin password"
         />
       </div>
-
-      {error && (
-        <p className="text-center text-sm text-error">
+      {error ? (
+        <p
+          className="admin-feedback admin-feedback--error"
+          id="login-error"
+          role="alert"
+        >
           {error}
         </p>
-      )}
-
+      ) : null}
       <button
         type="submit"
+        className="admin-button admin-button--primary admin-login-submit"
         disabled={loading}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-on-primary transition-all duration-200 hover:scale-[1.02] disabled:opacity-50"
       >
-        {loading ? "Authenticating..." : "Login"}
+        {loading ? "Authenticating…" : "Login"}
       </button>
     </form>
   );
 }
 
+/** Presents the same identity as the portfolio with a focused sign-in form. */
 export default function AdminLoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-surface px-4">
-      <div className="w-full max-w-md rounded-default border border-white/10 bg-white/[0.03] p-8 backdrop-blur-[20px]">
-        <div className="mb-8 text-center">
-          <Link href="/" className="text-xl font-bold text-primary">
-            Daly.
-          </Link>
-          <h1 className="mt-4 font-display text-2xl font-bold text-on-surface">
-            Admin Panel
-          </h1>
-          <p className="mt-2 text-sm text-on-surface-variant">
-            Enter your password to access the admin dashboard.
-          </p>
-        </div>
-
-        <Suspense fallback={<div className="py-4 text-center text-on-surface-variant">Loading...</div>}>
+    <main className="admin-login-layout">
+      <section className="admin-login-brand">
+        <Link href="/" aria-label="Daly portfolio">
+          <BrandLogo />
+        </Link>
+        <p className="admin-login-statement">
+          Your work.
+          <br />
+          Every detail.
+        </p>
+        <p>Projects, experiences, and the next chapter of your portfolio.</p>
+        <Link href="/" className="admin-text-link">
+          Back to portfolio ↗
+        </Link>
+      </section>
+      <section
+        className="admin-login-form"
+        aria-labelledby="admin-login-heading"
+      >
+        <h1 id="admin-login-heading">Admin panel</h1>
+        <p className="admin-page-copy">Sign in to manage your portfolio.</p>
+        <Suspense
+          fallback={
+            <p className="admin-muted" role="status">
+              Loading sign-in…
+            </p>
+          }
+        >
           <LoginForm />
         </Suspense>
-
-        <div className="mt-6 text-center">
-          <Link
-            href="/"
-            className="text-sm text-on-surface-variant transition-colors duration-200 hover:text-primary"
-          >
-            Back to Portfolio
-          </Link>
-        </div>
-      </div>
-    </div>
+        <p className="admin-login-note">Your changes publish through GitHub.</p>
+      </section>
+    </main>
   );
 }

@@ -1,0 +1,29 @@
+SAMPLE NOTIFICATION — fictional content
+
+Daly Chouikh
+Software & AI Engineer
+
+New contact message
+===================
+
+Received: 2026-10-25T09:15:00+01:00
+
+From: Amira Ben Salem
+Email: amira+project@example.test
+
+Message:
+--------
+Hello Daly,
+
+I came across your portfolio and would love to discuss a project with you. We are building a small tool to help our team explore research documents.
+
+Are you available for a conversation next week?
+
+Best,
+Amira
+
+Reply directly to this email to reach amira+project@example.test.
+
+-------------------
+Portfolio: https://www.dev-daly.tn
+An automated notification from the portfolio contact form.
